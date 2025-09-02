@@ -1,0 +1,71 @@
+<?php
+$template = 'allotment-Letter.jpg'; // allotment letter background image
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Allotment Letter</title>
+<style>
+  @page { size: A4; margin: 0; }
+  body { margin: 0; padding: 0; }
+  .a4 {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: auto;
+    background: url('<?php echo $template; ?>') no-repeat center top;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+  }
+  .field {
+    position: absolute;
+    font-size: 12pt;
+    color: #000;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: auto;
+  }
+  @media print {
+    .no-print { display: none; }
+    .field { border: none; }
+  }
+  /* --- Input field positions --- */
+  #name        { top: 67mm; left: 28mm; width: 140mm; }
+  #father      { top: 76mm; left: 64mm; width: 140mm; }
+  #nic         { top: 84mm; left: 35mm; width: 80mm; }
+  #contact     { top: 94mm; left: 35mm; width: 100mm; }
+  #address     { top: 103mm; left: 60mm; width: 140mm; }
+  #property    { top: 121mm; left: 45mm; width: 60mm; }
+  #size        { top: 121mm; left: 135mm; width: 60mm; }
+  #location    { top: 131mm; left: 45mm; width: 80mm; }
+  #category    { top: 131mm; left: 135mm; width: 60mm; }
+  #design    { top: 287mm;
+    left: 57mm;
+    width: 100mm; text-align:center; font-size:13px; padding:6px;}
+</style>
+</head>
+<body>
+<div class="no-print" style="text-align:center; margin:10px;">
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div class="a4">
+  <input id="name" class="field" type="text" placeholder="Name">
+  <input id="father" class="field" type="text" placeholder="Father/Husband Name">
+  <input id="nic" class="field" type="text" placeholder="N.I.C No">
+  <input id="contact" class="field" type="text" placeholder="Contact">
+  <input id="address" class="field" type="text" placeholder="Residential Address">
+  <input id="property" class="field" type="text" placeholder="Property No">
+  <input id="size" class="field" type="text" placeholder="Size">
+  <input id="location" class="field" type="text" placeholder="Location">
+  <input id="category" class="field" type="text" placeholder="Category">
+   <!-- <label id="design" class="field">Software design by Ghulam Murtaza | 0323-2054415</label> -->
+</div>
+
+<footer style="text-align:center; font-size:13px; padding:6px; background:#333; color:#fff;">
+  Software design by Ghulam Murtaza | 0323-2054415
+</footer>
+</body>
+</html>

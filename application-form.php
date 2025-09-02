@@ -1,0 +1,88 @@
+<?php
+// index.php
+$template = 'application-form.jpg'; // rename your uploaded image to this or update the filename
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Application Form - Overlay</title>
+<style>
+  @page { size: A4; margin: 0; }
+  body { margin: 0; padding: 0; }
+  .a4 {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: auto;
+    background: url('<?php echo $template; ?>') no-repeat center top;
+    background-size: cover;
+  }
+  .field {
+    position: absolute;
+    border: none;
+    background: transparent;
+    font-size: 12pt;
+    width: 70mm;
+    color: #000;
+  }
+  @media print {
+    .no-print { display: none; }
+  }
+
+  /* Field positions (adjusted to uploaded form) */
+  #name { top: 93mm; left: 40mm; width: 120mm; }
+  #father { top: 100mm; left: 70mm; width: 120mm; }
+  #nic { top: 107mm; left: 40mm; width: 60mm; }
+  #email { top: 107mm; left: 135mm; width: 60mm; }
+  #mobile { top: 114mm; left: 40mm; width: 60mm; }
+  #landline { top: 114mm; left: 100mm; width: 60mm; }
+  #dob { top: 114mm; left: 162mm; width: 35mm; }
+  #nationality { top: 121mm; left: 50mm; width: 70mm; }
+  #occupation { top: 121mm; left: 140mm; width: 60mm; }
+  #address { top: 128mm; left: 55mm; width: 150mm; height: 15mm; font-size: 11pt; }
+  #property_no { top: 142mm; left: 50mm; width: 50mm; }
+  #size { top: 142mm; left: 135mm; width: 40mm; }
+  #location { top: 149mm; left: 50mm; width: 80mm; }
+  #category { top: 149mm; left: 135mm; width: 50mm; }
+
+  /* Next of Kin */
+  #nok_name { top: 166mm; left: 40mm; width: 90mm; }
+  #nok_nic { top: 166mm; left: 140mm; width: 60mm; }
+  #nok_father { top: 174mm; left: 60mm; width: 90mm; }
+  #nok_relation { top: 174mm; left: 140mm; width: 60mm; }
+  #design { top: 279mm;
+    left: 57mm;
+    width: 91mm; font-size:13px; padding:6px;}
+</style>
+</head>
+<body>
+<div class="no-print" style="text-align:center; margin:10px;">
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div class="a4">
+  <input id="name" class="field" type="text" placeholder="Name">
+  <input id="father" class="field" type="text" placeholder="Father/Husband Name">
+  <input id="nic" class="field" type="text" placeholder="N.I.C No.">
+  <input id="email" class="field" type="text" placeholder="Email">
+  <input id="mobile" class="field" type="text" placeholder="Mobile">
+  <input id="landline" class="field" type="text" placeholder="Land Line">
+  <input id="dob" class="field" type="text" placeholder="Date of Birth">
+  <input id="nationality" class="field" type="text" placeholder="Nationality">
+  <input id="occupation" class="field" type="text" placeholder="Occupation">
+  <textarea id="address" class="field" placeholder="Residential Address"></textarea>
+  <input id="property_no" class="field" type="text" placeholder="Property No">
+  <input id="size" class="field" type="text" placeholder="Size">
+  <input id="location" class="field" type="text" placeholder="Location">
+  <input id="category" class="field" type="text" placeholder="Category">
+
+  <!-- Next of Kin -->
+  <input id="nok_name" class="field" type="text" placeholder="Next of Kin Name">
+  <input id="nok_nic" class="field" type="text" placeholder="N.I.C">
+  <input id="nok_father" class="field" type="text" placeholder="Father/Husband">
+  <input id="nok_relation" class="field" type="text" placeholder="Relation">
+  <!-- <label id="design" class="field">Software design by Ghulam Murtaza | 0323-2054415</label> -->
+</div>
+</body>
+</html>

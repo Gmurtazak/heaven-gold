@@ -1,0 +1,144 @@
+<?php
+$template = 'receipt-form.jpg'; // your receipt background image
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Receipt Form</title>
+<style>
+  @page { size: A4; margin: 0; }
+  body { margin: 0; padding: 0; }
+  .a4 {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: auto;
+    background: url('<?php echo $template; ?>') no-repeat center top;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+  }
+
+  .field {
+    position: absolute;
+    font-size: 11pt;
+    line-height: 1.2;
+    color: #000;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 2px 4px;
+  }
+
+  @media print {
+    .no-print { display: none; }
+    footer { display: none; } /* hide footer when printing */
+    .field {
+      border: none;  /* hide input borders when printing */
+    }
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  /* --- Office Copy (top half) --- */
+  #folio1 { top: 43mm; left: 35mm; width: 40mm; }
+  #date1 { top: 43mm; left: 165mm; width: 35mm; }
+  #received1 { top: 50mm; left: 50mm; width: 120mm; }
+  #father1 { top: 57mm; left: 65mm; width: 120mm; }
+  #nic1 { top: 64mm; left: 40mm; width: 65mm; }
+  #contact1 { top: 64mm; left: 135mm; width: 60mm; }
+
+  #saleid1 { top: 77mm; left: 60mm; width: 60mm; }
+  #propertyno1 { top: 77mm; left: 150mm; width: 40mm; }
+  #size1 { top: 83mm; left: 40mm; width: 60mm; }
+  #location1 { top: 83mm; left: 135mm; width: 60mm; }
+  #reference1 { top: 90mm; left: 50mm; width: 150mm; }
+  #remarks1 { top: 90mm; left: 135mm; width: 60mm; }
+  #cheque1 { top: 97mm; left: 95mm; width: 110mm; }
+  #bank1 { top: 104mm; left: 85mm; width: 120mm; }
+  #words1 { top: 110mm; left: 55mm; width: 120mm; }
+  #amount1 { top: 118mm; left: 35mm; width: 60mm; }
+  #balance1 { top: 124mm; left: 34mm; width: 60mm; }
+  #design1 { top: 143mm;
+    left: 62mm;
+    width: 96mm;font-size:13px; padding:6px;}
+  /* --- Client Copy (bottom half) --- */
+  #folio2 { top: 191mm; left: 35mm; width: 40mm; }
+  #date2 { top: 191mm; left: 165mm; width: 35mm; }
+  #received2 { top: 198mm; left: 50mm; width: 120mm; }
+  #father2 { top: 204mm; left: 65mm; width: 120mm; }
+  #nic2 { top: 212mm; left: 40mm; width: 65mm; }
+  #contact2 { top: 212mm; left: 135mm; width: 60mm; }
+
+  #saleid2 { top: 225mm; left: 60mm; width: 60mm; }
+  #propertyno2 { top: 225mm; left: 150mm; width: 40mm; }
+  #size2 { top: 230mm; left: 31mm; width: 60mm; }
+  #location2 { top: 230mm; left: 135mm; width: 60mm; }
+  #reference2 { top: 238mm; left: 50mm; width: 150mm; }
+  #remarks2 { top: 238mm; left: 135mm; width: 60mm; }
+  #cheque2 { top: 244mm; left: 95mm; width: 110mm; }
+  #bank2 { top: 251mm; left: 85mm; width: 120mm; }
+  #words2 { top: 258mm; left: 55mm; width: 120mm; }
+  #amount2 { top: 265mm; left: 33mm; width: 60mm; }
+  #balance2 { top: 272mm; left: 32mm; width: 60mm; }
+  #design { top: 291mm;
+    left: 59mm;
+    width: 96mm;font-size:13px; padding:6px; }
+</style>
+</head>
+<body>
+<div class="no-print" style="text-align:center; margin:10px;">
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div class="a4">
+  <!-- Office Copy -->
+  <input id="folio1" class="field" type="text" placeholder="Folio">
+  <input id="date1" class="field" type="text" placeholder="Date">
+  <input id="received1" class="field" type="text" placeholder="Received From">
+  <input id="father1" class="field" type="text" placeholder="Father/Husband Name">
+  <input id="nic1" class="field" type="text" placeholder="NIC">
+  <input id="contact1" class="field" type="text" placeholder="Contact">
+  <input id="saleid1" class="field" type="text" placeholder="Sale ID">
+  <input id="propertyno1" class="field" type="text" placeholder="Property No">
+  <input id="size1" class="field" type="text" placeholder="Size">
+  <input id="location1" class="field" type="text" placeholder="Location">
+  <input id="reference1" class="field" type="text" placeholder="Reference">
+  <input id="remarks1" class="field" type="text" placeholder="Remarks">
+  <input id="cheque1" class="field" type="text" placeholder="Cheque/Bank Draft #">
+  <input id="bank1" class="field" type="text" placeholder="Bank & Branch">
+  <input id="words1" class="field" type="text" placeholder="Amount in words">
+  <input id="amount1" class="field" type="text" placeholder="Amount">
+  <input id="balance1" class="field" type="text" placeholder="Balance">
+<!-- <label id="design1" class="field">Software design by Ghulam Murtaza | 0323-2054415</label> -->
+  <!-- Client Copy -->
+  <input id="folio2" class="field" type="text" placeholder="Folio">
+  <input id="date2" class="field" type="text" placeholder="Date">
+  <input id="received2" class="field" type="text" placeholder="Received From">
+  <input id="father2" class="field" type="text" placeholder="Father/Husband Name">
+  <input id="nic2" class="field" type="text" placeholder="NIC">
+  <input id="contact2" class="field" type="text" placeholder="Contact">
+  <input id="saleid2" class="field" type="text" placeholder="Sale ID">
+  <input id="propertyno2" class="field" type="text" placeholder="Property No">
+  <input id="size2" class="field" type="text" placeholder="Size">
+  <input id="location2" class="field" type="text" placeholder="Location">
+  <input id="reference2" class="field" type="text" placeholder="Reference">
+  <input id="remarks2" class="field" type="text" placeholder="Remarks">
+  <input id="cheque2" class="field" type="text" placeholder="Cheque/Bank Draft #">
+  <input id="bank2" class="field" type="text" placeholder="Bank & Branch">
+  <input id="words2" class="field" type="text" placeholder="Amount in words">
+  <input id="amount2" class="field" type="text" placeholder="Amount">
+  <input id="balance2" class="field" type="text" placeholder="Balance">
+  <!-- <label id="design" class="field">Software design by Ghulam Murtaza | 0323-2054415</label> -->
+</div>
+</body>
+</html>
