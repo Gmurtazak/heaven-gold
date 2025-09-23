@@ -1,0 +1,112 @@
+<?php
+$template = 'payment-schedule.jpg'; // Background image for payment form
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Heaven Gold City Phase II - Payment Schedule</title>
+<style>
+  @page { size: A4; margin: 0; }
+  body { margin: 0; padding: 0; }
+  .a4 {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: auto;
+    background: url('<?php echo $template; ?>') no-repeat center top;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+  }
+  .field {
+    position: absolute;
+    font-size: 10pt;
+    color: #000;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  @media print {
+    .no-print { display: none; }
+    .field { border: none; }
+  }
+
+  /* === Adjust these positions according to your image layout === */
+  #saleDate     { top: 60mm; left: 35mm; width: 35mm; }
+  #saleTerm     { top: 60mm; left: 116mm; width: 40mm; }
+  #name         { top: 87mm; left: 30mm; width: 120mm; }
+  #projectname{ top: 78mm; left: 48mm; width: 120mm; }
+  #fatherName   { top: 97mm; left: 61mm; width: 120mm; }
+   #nic          { top: 106mm; left: 35mm; width: 40mm; }
+  #contact      { top: 106mm; left: 95mm; width: 40mm; }
+  #email        { top: 106mm; left: 150mm; width: 50mm; }
+ #address      { top: 115mm; left: 54mm; width: 165mm; }
+ #propertyNo   { top: 124mm; left: 40mm; width: 35mm; }
+  #size         { top: 124mm; left: 87mm; width: 35mm; }
+   #location     { top: 124mm; left: 147mm; width: 80mm; }
+ #category     { top: 133mm; left: 35mm; width: 35mm; }
+  #features     { top: 133mm; left: 99mm; width: 125mm; }
+  #westOpen     { top: 142mm; left: 37mm; width: 35mm; }
+ #parkFacing   { top: 142mm; left: 102mm; width: 35mm; }
+  #totalSaleAmt { top: 142mm; left: 158mm; width: 60mm; }
+  #roadFacing   { top: 151mm; left: 39mm; width: 35mm; }
+ #corner       { top: 151mm; left: 93mm; width: 35mm; }
+  #discount     { top: 151mm; left: 148mm; width: 60mm; }
+  #groundFacing { top: 160mm; left: 44mm; width: 35mm; }
+  #netSaleAmt   { top: 160mm; left: 113mm; width: 105mm; }    /* */
+
+  /* Table Rows (S/NO - 1 to 16): Place manually or with JS if editable rows needed */
+  /* Example for Row 1 */
+  /* #row1_date    { top: 115mm; left: 30mm; width: 30mm; }
+  #row1_desc    { top: 115mm; left: 65mm; width: 90mm; }
+  #row1_amt     { top: 115mm; left: 160mm; width: 35mm; } */
+
+</style>
+</head>
+<body>
+
+<!-- Print Button -->
+<div class="no-print" style="text-align:center; margin:10px;">
+  <button onclick="window.print()">🖨️ Print</button>
+</div>
+
+<!-- Form Container -->
+<div class="a4">
+
+  <!-- Basic Info Fields -->
+  <input id="saleDate" class="field" type="text" placeholder="Sale Date">
+  <input id="saleTerm" class="field" type="text" placeholder="Sale Term">
+   <input id="projectname" class="field" type="text" placeholder="project name">
+  <input id="name" class="field" type="text" placeholder="Name">
+  <input id="fatherName" class="field" type="text" placeholder="Father/Husband Name">
+  <input id="nic" class="field" type="text" placeholder="N.I.C No">
+  <input id="contact" class="field" type="text" placeholder="Contact">
+  <input id="email" class="field" type="text" placeholder="Email">
+  <input id="address" class="field" type="text" placeholder="Residential Address">
+
+  <!-- Property Info -->
+  <input id="propertyNo" class="field" type="text" placeholder="Property No">
+  <input id="size" class="field" type="text" placeholder="Size">
+  <input id="location" class="field" type="text" placeholder="Location">
+  <input id="category" class="field" type="text" placeholder="Category">
+  <input id="features" class="field" type="text" placeholder="Features">
+
+  <!-- Additional Details -->
+  <input id="westOpen" class="field" type="text" placeholder="West Open">
+  <input id="parkFacing" class="field" type="text" placeholder="Park Facing">
+  <input id="totalSaleAmt" class="field" type="text" placeholder="Total Sale Amt">
+  <input id="roadFacing" class="field" type="text" placeholder="Road Facing">
+  <input id="corner" class="field" type="text" placeholder="Corner">
+  <input id="discount" class="field" type="text" placeholder="Discount">
+  <input id="groundFacing" class="field" type="text" placeholder="Ground Facing">
+  <input id="netSaleAmt" class="field" type="text" placeholder="Net Sale Amount">
+
+  <!-- Example Payment Row (you can duplicate and adjust position for more rows) -->
+  <input id="row1_date" class="field" type="text" placeholder="Due Date">
+  <input id="row1_desc" class="field" type="text" placeholder="Description">
+  <input id="row1_amt" class="field" type="text" placeholder="Amount">
+
+</div>
+
+</body>
+</html>

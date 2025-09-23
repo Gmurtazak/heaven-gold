@@ -32,35 +32,35 @@ $template = 'booking-form.jpg'; // booking form background image
   }
 
   /* --- Input field positions (adjusted to your form image) --- */
-  #date         { top: 40mm; left: 35mm; width: 40mm; }
-  #sno          { top: 40mm; left: 150mm; width: 40mm; }
-  #name         { top: 50mm; left: 35mm; width: 130mm; }
-  #cnic1        { top: 60mm; left: 40mm; width: 120mm; }
-  #father       { top: 70mm; left: 55mm; width: 120mm; }
-  #address      { top: 80mm; left: 55mm; width: 140mm; }
-  #mobile       { top: 95mm; left: 40mm; width: 60mm; }
-  #res          { top: 95mm; left: 125mm; width: 60mm; }
-  #nationality  { top: 105mm; left: 45mm; width: 60mm; }
-  #occupation   { top: 105mm; left: 125mm; width: 60mm; }
+  #date         { top: 82mm; left: 35mm; width: 40mm; }
+  #sno          { top: 82mm; left: 158mm; width: 40mm; }
+  #name         { top: 88mm; left: 35mm; width: 130mm; }
+  #cnic1        { top: 99mm; left: 37mm; width: 217mm; }
+  #father       { top: 109mm; left: 57mm; width: 120mm; }
+  #address      { top: 115mm; left: 55mm; width: 140mm; }
+  #res          { top: 127mm; left: 125mm; width: 60mm; }
+  #mobile       { top: 127mm; left: 40mm; width: 60mm; }
+   #nationality  { top: 133mm; left: 45mm; width: 60mm; }
+  #occupation   { top: 133mm; left: 127mm; width: 60mm; }
   #nextkin      { top: 115mm; left: 45mm; width: 60mm; }
-  #relation     { top: 115mm; left: 125mm; width: 60mm; }
-  #cnic2        { top: 125mm; left: 40mm; width: 120mm; }
+  #relation     { top: 139mm; left: 125mm; width: 60mm; }
+  #cnic2        { top: 151mm; left: 37mm; width: 210mm; }
+  
+#booking      { top: 164mm; left: 40mm; width: 40mm; }
+  #discount     { top: 164mm; left: 99mm; width: 40mm; }
+   #cost         { top: 173mm; left: 40mm; width: 40mm; }
+  #ncost        { top: 173mm; left: 98mm; width: 40mm; }
+ 
+  #plot         { top: 182mm; left: 32mm; width: 40mm; }
+  #type         { top: 182mm; left: 60mm; width: 40mm; }
+  #size         { top: 191mm; left: 26mm; width: 40mm; }
+  #phase        { top: 191mm; left: 61mm; width: 40mm; }
+  #extras       { top: 182mm; left: 95mm; width: 40mm; }
+  #tcost        { top: 191mm; left: 94mm; width: 40mm; }
 
-  #booking      { top: 140mm; left: 40mm; width: 40mm; }
-  #discount     { top: 140mm; left: 110mm; width: 40mm; }
-  #cost         { top: 150mm; left: 40mm; width: 40mm; }
-  #ncost        { top: 150mm; left: 110mm; width: 40mm; }
-
-  #plot         { top: 160mm; left: 40mm; width: 40mm; }
-  #type         { top: 160mm; left: 110mm; width: 40mm; }
-  #size         { top: 170mm; left: 40mm; width: 40mm; }
-  #phase        { top: 170mm; left: 110mm; width: 40mm; }
-  #extras       { top: 180mm; left: 40mm; width: 40mm; }
-  #tcost        { top: 180mm; left: 110mm; width: 40mm; }
-
-  #sales        { top: 240mm; left: 50mm; width: 80mm; }
-  #signature    { top: 250mm; left: 50mm; width: 80mm; }
-  #applicant    { top: 250mm; left: 135mm; width: 80mm; }
+  #sales        { top: 255mm; left: 50mm; width: 80mm; }
+/*   #signature    { top: 250mm; left: 50mm; width: 80mm; }
+  #applicant    { top: 250mm; left: 135mm; width: 80mm; } */
 </style>
 </head>
 <body>
@@ -69,35 +69,39 @@ $template = 'booking-form.jpg'; // booking form background image
 </div>
 
 <div class="a4">
-  <input id="date" class="field" type="text" placeholder="Date">
-  <input id="sno" class="field" type="text" placeholder="S.No">
-  <input id="name" class="field" type="text" placeholder="Name">
-  <input id="cnic1" class="field" type="text" placeholder="CNIC No">
-  <input id="father" class="field" type="text" placeholder="Father/Husband Name">
-  <input id="address" class="field" type="text" placeholder="Residential Address">
-  <input id="mobile" class="field" type="text" placeholder="Mobile">
-  <input id="res" class="field" type="text" placeholder="Res">
-  <input id="nationality" class="field" type="text" placeholder="Nationality">
-  <input id="occupation" class="field" type="text" placeholder="Occupation">
-  <input id="nextkin" class="field" type="text" placeholder="Next of Kin">
-  <input id="relation" class="field" type="text" placeholder="Relation">
-  <input id="cnic2" class="field" type="text" placeholder="CNIC No">
+<form method="post" action="save.php" name="booking">
+  <input id="date" name="date" class="field" type="text" placeholder="Date">
+  <input id="sno" name="sno" class="field" type="text" placeholder="S.No">
+  <input id="name" name="name" class="field" type="text" placeholder="Name">
+  <input id="cnic1" name="cnic1" class="field" type="text" placeholder="CNIC No">
+  <input id="father" name="father" class="field" type="text" placeholder="Father/Husband Name">
+  <input id="address" name="address" class="field" type="text" placeholder="Residential Address">
+  <input id="mobile" name="mobile" class="field" type="text" placeholder="Mobile">
+  <input id="res" name="res" class="field" type="text" placeholder="Res">
+  <input id="nationality" name="nationality" class="field" type="text" placeholder="Nationality">
+  <input id="occupation" name="occupation" class="field" type="text" placeholder="Occupation">
+  <input id="nextkin" name="nextkin" class="field" type="text" placeholder="Next of Kin">
+  <input id="relation" name="relation" class="field" type="text" placeholder="Relation">
+  <input id="cnic2" name="cnic2" class="field" type="text" placeholder="CNIC No">
 
-  <input id="booking" class="field" type="text" placeholder="Booking">
-  <input id="discount" class="field" type="text" placeholder="Discount">
-  <input id="cost" class="field" type="text" placeholder="Cost">
-  <input id="ncost" class="field" type="text" placeholder="N. Cost">
+  <input id="booking" name="booking" class="field" type="text" placeholder="Booking">
+  <input id="discount" name="discount" class="field" type="text" placeholder="Discount">
+  <input id="cost" name="cost" class="field" type="text" placeholder="Cost">
+  <input id="ncost" name="ncost" class="field" type="text" placeholder="N. Cost">
 
-  <input id="plot" class="field" type="text" placeholder="Plot No">
-  <input id="type" class="field" type="text" placeholder="Type">
-  <input id="size" class="field" type="text" placeholder="Size">
-  <input id="phase" class="field" type="text" placeholder="Phase">
-  <input id="extras" class="field" type="text" placeholder="Extras">
-  <input id="tcost" class="field" type="text" placeholder="T. Cost">
+  <input id="plot" name="plot" class="field" type="text" placeholder="Plot No">
+  <input id="type" name="type" class="field" type="text" placeholder="Type">
+  <input id="size" name="size" class="field" type="text" placeholder="Size">
+  <input id="phase" name="phase" class="field" type="text" placeholder="Phase">
+  <input id="extras" name="extras" class="field" type="text" placeholder="Extras">
+  <input id="tcost" name="tcost" class="field" type="text" placeholder="T. Cost">
 
-  <input id="sales" class="field" type="text" placeholder="Sales Person Name">
-  <input id="signature" class="field" type="text" placeholder="Signature">
-  <input id="applicant" class="field" type="text" placeholder="Signature of Applicant">
+  <input id="sales" name="sales" class="field" type="text" placeholder="Sales Person Name">
+  <input id="signature" name="signature" class="field" type="text" placeholder="Signature">
+  <input id="applicant" name="applicant" class="field" type="text" placeholder="Signature of Applicant">
+
+  <button type="submit" class="no-print">Save</button>
+</form>
 </div>
 
 <footer style="text-align:center; font-size:13px; padding:6px; background:#333; color:#fff;">

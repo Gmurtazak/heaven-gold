@@ -53,7 +53,9 @@
     <a target="_blank" href="receipt-form.php"><button>Receipt Form </button></a>
     <a target="_blank" href="allotment-Letter.php"><button>Allotment Letter</button></a>
     <a target="_blank" href="booking-form.php"><button>Booking Form</button></a>
-    <!-- <a target="_blank" href="form5.html"><button>Form 5</button></a> -->
+    <a target="_blank" href="payment-schedule.php"><button>Payment schedule</button></a>
+     <a target="_blank" href="payment-schedule-2.php"><button>Payment schedule -2</button></a>
+      <a target="_blank" href="confirmation-letter.php"><button>Confirmation Letter</button></a>
   </div>
 
   <footer>
