@@ -1,7 +1,3 @@
-<?php
-// index.php
-$template = 'application-form.jpg'; // rename your uploaded image to this or update the filename
-?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -15,7 +11,7 @@ $template = 'application-form.jpg'; // rename your uploaded image to this or upd
     width: 210mm;
     height: 297mm;
     margin: auto;
-    background: url('<?php echo $template; ?>') no-repeat center top;
+    background: url('application-form.jpg') no-repeat center top; /* <-- direct reference */
     background-size: cover;
   }
   .field {
@@ -51,9 +47,13 @@ $template = 'application-form.jpg'; // rename your uploaded image to this or upd
   #nok_nic { top: 166mm; left: 140mm; width: 60mm; }
   #nok_father { top: 174mm; left: 60mm; width: 90mm; }
   #nok_relation { top: 174mm; left: 140mm; width: 60mm; }
-  #design { top: 279mm;
+  #design {
+    top: 279mm;
     left: 57mm;
-    width: 91mm; font-size:13px; padding:6px;}
+    width: 91mm;
+    font-size: 13px;
+    padding: 6px;
+  }
 </style>
 </head>
 <body>
