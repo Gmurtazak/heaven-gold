@@ -1,23 +1,21 @@
-<?php
-$template = 'payment-schedule.jpg'; // Background image for payment form
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Heaven Gold City Phase II - Payment Schedule</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
   @page { size: A4; margin: 0; }
-  body { margin: 0; padding: 0; }
+  body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
   .a4 {
     position: relative;
     width: 210mm;
     height: 297mm;
     margin: auto;
-    background: url('<?php echo $template; ?>') no-repeat center top;
+    background: url('payment-schedule.jpg') no-repeat center top;
     background-size: cover;
-    font-family: Arial, sans-serif;
   }
+
   .field {
     position: absolute;
     font-size: 10pt;
@@ -26,57 +24,88 @@ $template = 'payment-schedule.jpg'; // Background image for payment form
     border: none;
     outline: none;
   }
+
+  .no-print {
+    margin: 10px 0;
+    text-align: center;
+  }
+  .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+  }
+  .btn:hover { background: #555; }
+
   @media print {
     .no-print { display: none; }
     .field { border: none; }
   }
 
-  /* === Adjust these positions according to your image layout === */
+  /* === Field positions (adjust to match your background exactly) === */
   #saleDate     { top: 60mm; left: 35mm; width: 35mm; }
   #saleTerm     { top: 60mm; left: 116mm; width: 40mm; }
+  #projectname  { top: 78mm; left: 48mm; width: 120mm; }
   #name         { top: 87mm; left: 30mm; width: 120mm; }
-  #projectname{ top: 78mm; left: 48mm; width: 120mm; }
   #fatherName   { top: 97mm; left: 61mm; width: 120mm; }
-   #nic          { top: 106mm; left: 35mm; width: 40mm; }
+  #nic          { top: 106mm; left: 35mm; width: 40mm; }
   #contact      { top: 106mm; left: 95mm; width: 40mm; }
   #email        { top: 106mm; left: 150mm; width: 50mm; }
- #address      { top: 115mm; left: 54mm; width: 165mm; }
- #propertyNo   { top: 124mm; left: 40mm; width: 35mm; }
+  #address      { top: 115mm; left: 54mm; width: 165mm; }
+
+  #propertyNo   { top: 124mm; left: 40mm; width: 35mm; }
   #size         { top: 124mm; left: 87mm; width: 35mm; }
-   #location     { top: 124mm; left: 147mm; width: 80mm; }
- #category     { top: 133mm; left: 35mm; width: 35mm; }
+  #location     { top: 124mm; left: 147mm; width: 80mm; }
+  #category     { top: 133mm; left: 35mm; width: 35mm; }
   #features     { top: 133mm; left: 99mm; width: 125mm; }
+
   #westOpen     { top: 142mm; left: 37mm; width: 35mm; }
- #parkFacing   { top: 142mm; left: 102mm; width: 35mm; }
+  #parkFacing   { top: 142mm; left: 102mm; width: 35mm; }
   #totalSaleAmt { top: 142mm; left: 158mm; width: 60mm; }
+
   #roadFacing   { top: 151mm; left: 39mm; width: 35mm; }
- #corner       { top: 151mm; left: 93mm; width: 35mm; }
+  #corner       { top: 151mm; left: 93mm; width: 35mm; }
   #discount     { top: 151mm; left: 148mm; width: 60mm; }
+
   #groundFacing { top: 160mm; left: 44mm; width: 35mm; }
-  #netSaleAmt   { top: 160mm; left: 113mm; width: 105mm; }    /* */
+  #netSaleAmt   { top: 160mm; left: 113mm; width: 105mm; }
 
-  /* Table Rows (S/NO - 1 to 16): Place manually or with JS if editable rows needed */
-  /* Example for Row 1 */
-  /* #row1_date    { top: 115mm; left: 30mm; width: 30mm; }
-  #row1_desc    { top: 115mm; left: 65mm; width: 90mm; }
-  #row1_amt     { top: 115mm; left: 160mm; width: 35mm; } */
+  /* Row template — initial row top. New rows will be added below this */
+  .payment-row .date { left: 30mm; width: 30mm; }
+  .payment-row .desc { left: 65mm; width: 90mm; }
+  .payment-row .amt  { left: 160mm; width: 35mm; }
 
+  footer {
+    text-align: center;
+    font-size: 13px;
+    padding: 6px;
+    background: #333;
+    color: #fff;
+  }
 </style>
 </head>
 <body>
 
-<!-- Print Button -->
-<div class="no-print" style="text-align:center; margin:10px;">
-  <button onclick="window.print()">🖨️ Print</button>
+<!-- Controls -->
+<div class="no-print">
+  <button class="btn" onclick="window.print()">🖨️ Print</button>
+  <button class="btn" id="addRowBtn">➕ Add Payment Row</button>
+  <button class="btn" id="removeRowBtn">➖ Remove Last Row</button>
+  <button class="btn" id="downloadCsvBtn">⬇️ Download CSV</button>
 </div>
 
-<!-- Form Container -->
-<div class="a4">
+<!-- A4 Page -->
+<div class="a4" id="page">
 
   <!-- Basic Info Fields -->
   <input id="saleDate" class="field" type="text" placeholder="Sale Date">
   <input id="saleTerm" class="field" type="text" placeholder="Sale Term">
-   <input id="projectname" class="field" type="text" placeholder="project name">
+  <input id="projectname" class="field" type="text" placeholder="Project Name">
   <input id="name" class="field" type="text" placeholder="Name">
   <input id="fatherName" class="field" type="text" placeholder="Father/Husband Name">
   <input id="nic" class="field" type="text" placeholder="N.I.C No">
@@ -101,12 +130,169 @@ $template = 'payment-schedule.jpg'; // Background image for payment form
   <input id="groundFacing" class="field" type="text" placeholder="Ground Facing">
   <input id="netSaleAmt" class="field" type="text" placeholder="Net Sale Amount">
 
-  <!-- Example Payment Row (you can duplicate and adjust position for more rows) -->
-  <input id="row1_date" class="field" type="text" placeholder="Due Date">
-  <input id="row1_desc" class="field" type="text" placeholder="Description">
-  <input id="row1_amt" class="field" type="text" placeholder="Amount">
-
+  <!-- Payment rows container (rows are absolutely positioned inside the page) -->
+  <div id="rowsContainer"></div>
 </div>
+
+<footer>
+  Software design by Ghulam Murtaza | 0323-2054415
+</footer>
+
+<script>
+/*
+  Row builder:
+  - rowsContainer holds dynamically created input groups (.payment-row)
+  - new rows are positioned absolutely by setting style.top in mm
+  - initialTopMM and rowStepMM control spacing — tweak as needed to match background
+*/
+(function () {
+  const rowsContainer = document.getElementById('rowsContainer');
+  const addBtn = document.getElementById('addRowBtn');
+  const removeBtn = document.getElementById('removeRowBtn');
+  const downloadBtn = document.getElementById('downloadCsvBtn');
+
+  // first row top (mm) and spacing between rows
+  let initialTopMM = 180;   // matches earlier example row top
+  const rowStepMM = 6;      // gap between rows in mm
+  let rowCount = 0;
+
+  function createRow(topMM) {
+    rowCount++;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'payment-row';
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = topMM + 'mm';
+    wrapper.style.left = '0';
+    wrapper.style.width = '100%';
+
+    // date input
+    const date = document.createElement('input');
+    date.type = 'text';
+    date.placeholder = 'Due Date';
+    date.className = 'field date';
+    date.style.position = 'absolute';
+    date.style.top = '0';
+    date.style.left = '30mm';
+    date.style.width = '30mm';
+    date.dataset.col = 'date';
+    wrapper.appendChild(date);
+
+    // desc input
+    const desc = document.createElement('input');
+    desc.type = 'text';
+    desc.placeholder = 'Description';
+    desc.className = 'field desc';
+    desc.style.position = 'absolute';
+    desc.style.top = '0';
+    desc.style.left = '65mm';
+    desc.style.width = '90mm';
+    desc.dataset.col = 'description';
+    wrapper.appendChild(desc);
+
+    // amount input
+    const amt = document.createElement('input');
+    amt.type = 'text';
+    amt.placeholder = 'Amount';
+    amt.className = 'field amt';
+    amt.style.position = 'absolute';
+    amt.style.top = '0';
+    amt.style.left = '160mm';
+    amt.style.width = '35mm';
+    amt.dataset.col = 'amount';
+    wrapper.appendChild(amt);
+
+    rowsContainer.appendChild(wrapper);
+    return wrapper;
+  }
+
+  function addRow() {
+    const top = initialTopMM + rowCount * rowStepMM;
+    createRow(top);
+  }
+
+  function removeRow() {
+    if (rowCount === 0) return;
+    const last = rowsContainer.lastElementChild;
+    if (last) {
+      rowsContainer.removeChild(last);
+      rowCount--;
+    }
+  }
+
+  function collectDataToCSV() {
+    // Collect basic fields
+    const basic = {
+      saleDate: document.getElementById('saleDate').value,
+      saleTerm: document.getElementById('saleTerm').value,
+      projectname: document.getElementById('projectname').value,
+      name: document.getElementById('name').value,
+      fatherName: document.getElementById('fatherName').value,
+      nic: document.getElementById('nic').value,
+      contact: document.getElementById('contact').value,
+      email: document.getElementById('email').value,
+      address: document.getElementById('address').value,
+      propertyNo: document.getElementById('propertyNo').value,
+      size: document.getElementById('size').value,
+      location: document.getElementById('location').value,
+      category: document.getElementById('category').value,
+      features: document.getElementById('features').value,
+      totalSaleAmt: document.getElementById('totalSaleAmt').value,
+      discount: document.getElementById('discount').value,
+      netSaleAmt: document.getElementById('netSaleAmt').value
+    };
+
+    // Payment rows
+    const rows = [];
+    Array.from(rowsContainer.children).forEach((r) => {
+      const rowObj = {};
+      const inputs = r.querySelectorAll('input');
+      inputs.forEach(i => {
+        const k = i.dataset.col || i.placeholder || '';
+        rowObj[k] = i.value;
+      });
+      rows.push(rowObj);
+    });
+
+    // Build CSV text: first basic info, then payment rows
+    const lines = [];
+    // Basic section
+    lines.push('Field,Value');
+    Object.entries(basic).forEach(([k,v]) => {
+      lines.push(`"${k}","${(v||'').replace(/"/g,'""')}"`);
+    });
+
+    // Payment rows section
+    lines.push('');
+    lines.push('Row,Due Date,Description,Amount');
+    rows.forEach((r,index) => {
+      lines.push(`${index+1},"${(r.date||'').replace(/"/g,'""')}","${(r.description||'').replace(/"/g,'""')}","${(r.amount||'').replace(/"/g,'""')}"`);
+    });
+
+    return lines.join('\n');
+  }
+
+  function downloadCSV() {
+    const csv = collectDataToCSV();
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'payment-schedule.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Event bindings
+  addBtn.addEventListener('click', addRow);
+  removeBtn.addEventListener('click', removeRow);
+  downloadBtn.addEventListener('click', downloadCSV);
+
+  // add initial example row
+  addRow();
+})();
+</script>
 
 </body>
 </html>
