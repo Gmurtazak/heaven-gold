@@ -121,33 +121,57 @@
   Software design by Ghulam Murtaza | 0323-2054415
 </footer>
 
-<script>
-   const scriptURL = "https://script.google.com/macros/s/AKfycbxyz12345/exec"; // replace with your Apps Script Web App URL
+ <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxyz12345/exec"; // replace with your Apps Script Web App URL
 
-  function submitForm() {
-    const form = document.getElementById("bookingForm");
-    const data = {};
-    for (let i = 0; i < form.elements.length; i++) {
-      if (form.elements[i].name) {
-        data[form.elements[i].name] = form.elements[i].value;
-      }
-    }
+    document.getElementById("bookingForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-    fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .then(response => {
-      alert("Data saved successfully!");
-      form.reset();
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("Error saving data!");
+      const data = {
+        date: document.getElementById("date").value,
+        sno: document.getElementById("sno").value,
+        name: document.getElementById("name").value,
+        cnic1: document.getElementById("cnic1").value,
+        father: document.getElementById("father").value,
+        address: document.getElementById("address").value,
+        mobile: document.getElementById("mobile").value,
+        res: document.getElementById("res").value,
+        nationality: document.getElementById("nationality").value,
+        occupation: document.getElementById("occupation").value,
+        nextkin: document.getElementById("nextkin").value,
+        relation: document.getElementById("relation").value,
+        cnic2: document.getElementById("cnic2").value,
+        booking: document.getElementById("booking").value,
+        discount: document.getElementById("discount").value,
+        cost: document.getElementById("cost").value,
+        ncost: document.getElementById("ncost").value,
+        plot: document.getElementById("plot").value,
+        type: document.getElementById("type").value,
+        size: document.getElementById("size").value,
+        phase: document.getElementById("phase").value,
+        extras: document.getElementById("extras").value,
+        tcost: document.getElementById("tcost").value,
+        sales: document.getElementById("sales").value,
+        signature: document.getElementById("signature").value,
+        applicant: document.getElementById("applicant").value
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(response => {
+        alert("Booking saved successfully!");
+        document.getElementById("bookingForm").reset();
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Something went wrong!");
+      });
     });
-  }
-</script>
+  </script>
+
 </body>
 </html>
