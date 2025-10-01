@@ -124,32 +124,89 @@
 </footer>
 
 <script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbydAjUuYibnwnALQmvcTXrHLnQBzSeoI7V76Hkg-6O2mWRBh5HfpAEEJ3Yv4LdhnaYB8w/exec"; // replace with your Apps Script Web App URL
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('bookingForm');
+  if (!form) return;
 
-  document.getElementById("bookingForm").addEventListener("submit", function(e) {
+  // === CONFIG ===
+  const saveToServer = false; // set to true if you want to POST the data to a server
+  const serverUrl = '/save-booking'; // change to your server endpoint if saveToServer = true
+  // =============
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const data = Object.fromEntries(new FormData(this).entries());
+    // Collect fields
+    const data = new FormData(form);
 
-    fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .then(response => {
-      if (response.status === "success") {
-        alert("Booking saved successfully!");
-        document.getElementById("bookingForm").reset();
-      } else {
-        alert("Error: " + response.message);
+    // Optional: preferred order or friendly labels (adjust as needed)
+    const fieldOrder = [
+      'date','sno','name','cnic1','father','address','mobile','res','nationality','occupation',
+      'nextkin','relation','cnic2','booking','discount','cost','ncost',
+      'plot','type','size','phase','extras','tcost','sales'
+    ];
+
+    // Build text content
+    const lines = [];
+    for (const key of fieldOrder) {
+      // Use empty string if field missing
+      const value = (data.get(key) || '').toString().trim();
+      // Create a friendly label from key (e.g., cnic1 -> CNIC 1)
+      const label = key.replace(/([A-Z])/g, ' $1') // split camelCase (if any)
+                       .replace(/(\d+)/g, ' $1')   // separate digits
+                       .replace(/_/g, ' ')        // underscores to spaces
+                       .replace(/\b\w/g, c => c.toUpperCase()); // capitalize
+      lines.push(`${label}: ${value}`);
+    }
+
+    // Append any extra fields not in the order (defensive)
+    for (const [k, v] of data.entries()) {
+      if (!fieldOrder.includes(k)) {
+        const value = (v || '').toString().trim();
+        const label = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        lines.push(`${label}: ${value}`);
       }
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("Something went wrong!");
-    });
+    }
+
+    const header = `Booking Form Export — ${new Date().toLocaleString()}`;
+    const content = [header, '--------------------------------', ...lines].join('\r\n');
+
+    // Create and trigger download (.txt file)
+    const blob = new Blob([content], { type: 'text/plain' });
+    const filename = `booking-${new Date().toISOString().replace(/[:.]/g,'-')}.txt`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(a.href);
+    a.remove();
+
+    // Optional: send to server (if you want server-side saving)
+    if (saveToServer && serverUrl) {
+      try {
+        // Convert FormData to JSON-friendly object
+        const payload = Object.fromEntries(data.entries());
+        const resp = await fetch(serverUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!resp.ok) {
+          console.error('Server save failed', resp.statusText);
+        } else {
+          console.log('Saved to server');
+        }
+      } catch (err) {
+        console.error('Error sending to server:', err);
+      }
+    }
+
+    // If you still want the normal HTML form submission (e.g., go to a thank-you page),
+    // uncomment the next line:
+    // form.submit();
   });
+});
 </script>
 
 </body>
