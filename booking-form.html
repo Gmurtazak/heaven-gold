@@ -1,3 +1,6 @@
+
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,7 +21,7 @@
     left: 0;
     width: 210mm;
     height: 297mm;
-    z-index: -1; /* image behind form fields */
+    z-index: -1;
   }
   .field {
     position: absolute;
@@ -69,14 +72,13 @@
 </head>
 <body>
 <div class="no-print" style="text-align:center; margin:20px;">
-  <button 
-    onclick="window.print()" 
+  <button onclick="window.print()" 
     style="padding:15px 30px; font-size:18px; border-radius:8px; background:#007bff; color:#fff; border:none; cursor:pointer;">
     Print
   </button>
 
-  <button 
-    onclick="submitForm()" 
+  <!-- ✅ Removed onclick="submitForm()" -->
+  <button type="submit" form="bookingForm"
     style="padding:15px 30px; font-size:18px; border-radius:8px; background:green; color:#fff; border:none; cursor:pointer; margin-left:10px;">
     Save
   </button>
@@ -121,55 +123,34 @@
   Software design by Ghulam Murtaza | 0323-2054415
 </footer>
 
- <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxlb1yRYs-4tkUPa7aXs6j9qoS6U4Izx9GYpKiRyezjTPiQDaMmF5kgJmEhddE5SsOnDg/exec"; // replace with your Apps Script Web App URL
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxlb1yRYs-4tkUPa7aXs6j9qoS6U4Izx9GYpKiRyezjTPiQDaMmF5kgJmEhddE5SsOnDg/exec"; // replace with your Apps Script Web App URL
 
-    document.getElementById("bookingForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+  document.getElementById("bookingForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-      const data = {
-  date: document.getElementById("date").value,
-  sno: document.getElementById("sno").value,
-  name: document.getElementById("name").value,
-  cnic1: document.getElementById("cnic1").value,
-  father: document.getElementById("father").value,
-  address: document.getElementById("address").value,
-  mobile: document.getElementById("mobile").value,
-  res: document.getElementById("res").value,
-  nationality: document.getElementById("nationality").value,
-  occupation: document.getElementById("occupation").value,
-  nextkin: document.getElementById("nextkin").value,
-  relation: document.getElementById("relation").value,
-  cnic2: document.getElementById("cnic2").value,
-  booking: document.getElementById("booking").value,
-  discount: document.getElementById("discount").value,
-  cost: document.getElementById("cost").value,
-  ncost: document.getElementById("ncost").value,
-  plot: document.getElementById("plot").value,
-  type: document.getElementById("type").value,
-  size: document.getElementById("size").value,
-  phase: document.getElementById("phase").value,
-  extras: document.getElementById("extras").value,
-  tcost: document.getElementById("tcost").value,
-  sales: document.getElementById("sales").value
-};
+    const data = Object.fromEntries(new FormData(this).entries());
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.json())
-      .then(response => {
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.status === "success") {
         alert("Booking saved successfully!");
         document.getElementById("bookingForm").reset();
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        alert("Something went wrong!");
-      });
+      } else {
+        alert("Error: " + response.message);
+      }
+    })
+    .catch(err => {
+      console.error("Error:", err);
+      alert("Something went wrong!");
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
