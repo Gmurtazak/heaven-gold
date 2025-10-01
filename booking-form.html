@@ -1,19 +1,19 @@
-
-
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <title>Booking Form</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
+  /* layout & printing */
   @page { size: A4; margin: 0; }
-  body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; }
   .a4 {
     position: relative;
     width: 210mm;
     height: 297mm;
-    margin: auto;
+    margin: 8px auto;
   }
   .a4 img.bg {
     position: absolute;
@@ -22,7 +22,10 @@
     width: 210mm;
     height: 297mm;
     z-index: -1;
+    object-fit: cover;
   }
+
+  /* form inputs */
   .field {
     position: absolute;
     font-size: 11pt;
@@ -30,9 +33,14 @@
     background: transparent;
     border: none;
     outline: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    font-family: inherit;
   }
+
   @media print {
-    .no-print { display: none; }
+    .no-print { display: none !important; }
     .field {
       border: none !important;
       background: transparent !important;
@@ -40,7 +48,7 @@
     }
   }
 
-  /* --- Input field positions --- */
+  /* --- Input field positions --- (kept your original positions) */
   #date       { top: 62mm; left: 26mm; width: 40mm; }
   #sno        { top: 62mm; left: 160mm; width: 35mm; }
   #name       { top: 69mm; left: 27mm; width: 130mm; }
@@ -68,27 +76,34 @@
   #tcost      { top: 183mm; left: 95mm; width: 35mm; }
 
   #sales      { top: 254mm; left: 51mm; width: 80mm; }
+
+  /* header buttons */
+  .controls { text-align:center; margin:20px; }
+  .controls button {
+    padding:12px 24px;
+    font-size:16px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+  }
+  .btn-print { background:#007bff; color:#fff; }
+  .btn-save  { background:green; color:#fff; margin-left:10px; }
 </style>
 </head>
 <body>
-<div class="no-print" style="text-align:center; margin:20px;">
-  <button onclick="window.print()" 
-    style="padding:15px 30px; font-size:18px; border-radius:8px; background:#007bff; color:#fff; border:none; cursor:pointer;">
-    Print
-  </button>
 
-  <!-- ✅ Removed onclick="submitForm()" -->
-  <button type="submit" form="bookingForm"
-    style="padding:15px 30px; font-size:18px; border-radius:8px; background:green; color:#fff; border:none; cursor:pointer; margin-left:10px;">
-    Save
-  </button>
+<div class="no-print controls">
+  <button class="btn-print" onclick="window.print()">Print</button>
+
+  <!-- Save button is now type="button" and we handle submit in JS (more reliable cross-browser) -->
+  <button id="saveBtn" class="btn-save" type="button">Save</button>
 </div>
 
 <div class="a4">
-  <!-- Background Image -->
-  <img src="booking-form.jpg" class="bg">
+  <!-- Background image: ensure booking-form.jpg exists in same folder -->
+  <img src="booking-form.jpg" class="bg" alt="Booking form background">
 
-  <form id="bookingForm">
+  <form id="bookingForm" autocomplete="off" novalidate>
     <input id="date" name="date" class="field" type="text" placeholder="Date">
     <input id="sno" name="sno" class="field" type="text" placeholder="S.No">
     <input id="name" name="name" class="field" type="text" placeholder="Name">
@@ -126,40 +141,36 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('bookingForm');
-  if (!form) return;
+  const saveBtn = document.getElementById('saveBtn');
+  if (!form || !saveBtn) return;
 
   // === CONFIG ===
-  const saveToServer = false; // set to true if you want to POST the data to a server
-  const serverUrl = '/save-booking'; // change to your server endpoint if saveToServer = true
+  const saveToServer = false; // set to true later if you add a server endpoint
+  const serverUrl = '/save-booking'; // change if saveToServer = true
   // =============
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // Central submit handler for form
+  async function handleSubmit(e) {
+    if (e) e.preventDefault();
 
-    // Collect fields
     const data = new FormData(form);
-
-    // Optional: preferred order or friendly labels (adjust as needed)
     const fieldOrder = [
       'date','sno','name','cnic1','father','address','mobile','res','nationality','occupation',
       'nextkin','relation','cnic2','booking','discount','cost','ncost',
       'plot','type','size','phase','extras','tcost','sales'
     ];
 
-    // Build text content
     const lines = [];
     for (const key of fieldOrder) {
-      // Use empty string if field missing
       const value = (data.get(key) || '').toString().trim();
-      // Create a friendly label from key (e.g., cnic1 -> CNIC 1)
       const label = key.replace(/([A-Z])/g, ' $1') // split camelCase (if any)
                        .replace(/(\d+)/g, ' $1')   // separate digits
-                       .replace(/_/g, ' ')        // underscores to spaces
-                       .replace(/\b\w/g, c => c.toUpperCase()); // capitalize
+                       .replace(/_/g, ' ')
+                       .replace(/\b\w/g, c => c.toUpperCase());
       lines.push(`${label}: ${value}`);
     }
 
-    // Append any extra fields not in the order (defensive)
+    // Append unexpected fields, if any
     for (const [k, v] of data.entries()) {
       if (!fieldOrder.includes(k)) {
         const value = (v || '').toString().trim();
@@ -171,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = `Booking Form Export — ${new Date().toLocaleString()}`;
     const content = [header, '--------------------------------', ...lines].join('\r\n');
 
-    // Create and trigger download (.txt file)
+    // Trigger download (.txt)
     const blob = new Blob([content], { type: 'text/plain' });
     const filename = `booking-${new Date().toISOString().replace(/[:.]/g,'-')}.txt`;
     const a = document.createElement('a');
@@ -182,29 +193,40 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(a.href);
     a.remove();
 
-    // Optional: send to server (if you want server-side saving)
+    // Optional: send to server
     if (saveToServer && serverUrl) {
       try {
-        // Convert FormData to JSON-friendly object
         const payload = Object.fromEntries(data.entries());
         const resp = await fetch(serverUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if (!resp.ok) {
-          console.error('Server save failed', resp.statusText);
-        } else {
-          console.log('Saved to server');
-        }
+        if (!resp.ok) console.error('Server save failed', resp.statusText);
+        else console.log('Saved to server');
       } catch (err) {
         console.error('Error sending to server:', err);
       }
     }
+  }
 
-    // If you still want the normal HTML form submission (e.g., go to a thank-you page),
-    // uncomment the next line:
-    // form.submit();
+  // handle actual form "submit" (covers keyboard Enter when inside a field)
+  form.addEventListener('submit', handleSubmit);
+
+  // Save button: trigger form.submit via requestSubmit if available (more reliable)
+  saveBtn.addEventListener('click', () => {
+    // If browsers support requestSubmit (preferred), use it to trigger form's submit event
+    if (typeof form.requestSubmit === 'function') {
+      form.requestSubmit();
+    } else {
+      // fallback: create a temporary submit button to trigger submit event
+      const tmp = document.createElement('button');
+      tmp.type = 'submit';
+      tmp.style.display = 'none';
+      form.appendChild(tmp);
+      tmp.click();
+      tmp.remove();
+    }
   });
 });
 </script>
