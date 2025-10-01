@@ -37,7 +37,7 @@
     }
   }
 
-  /* --- Input field positions (aligned with uploaded image) --- */
+  /* --- Input field positions --- */
   #date       { top: 62mm; left: 26mm; width: 40mm; }
   #sno        { top: 62mm; left: 160mm; width: 35mm; }
   #name       { top: 69mm; left: 27mm; width: 130mm; }
@@ -65,8 +65,6 @@
   #tcost      { top: 183mm; left: 95mm; width: 35mm; }
 
   #sales      { top: 254mm; left: 51mm; width: 80mm; }
-  /* #signature  { top: 255mm; left: 55mm; width: 80mm; }
-  #applicant  { top: 255mm; left: 140mm; width: 80mm; } */
 </style>
 </head>
 <body>
@@ -76,12 +74,19 @@
     style="padding:15px 30px; font-size:18px; border-radius:8px; background:#007bff; color:#fff; border:none; cursor:pointer;">
     Print
   </button>
+
+  <button 
+    onclick="submitForm()" 
+    style="padding:15px 30px; font-size:18px; border-radius:8px; background:green; color:#fff; border:none; cursor:pointer; margin-left:10px;">
+    Save
+  </button>
 </div>
+
 <div class="a4">
   <!-- Background Image -->
   <img src="booking-form.jpg" class="bg">
 
-  <form method="post" action="save.php" name="booking">
+  <form id="bookingForm">
     <input id="date" name="date" class="field" type="text" placeholder="Date">
     <input id="sno" name="sno" class="field" type="text" placeholder="S.No">
     <input id="name" name="name" class="field" type="text" placeholder="Name">
@@ -109,13 +114,40 @@
     <input id="tcost" name="tcost" class="field" type="text" placeholder="T. Cost">
 
     <input id="sales" name="sales" class="field" type="text" placeholder="Sales Person Name">
-     <!-- <input id="signature" name="signature" class="field" type="text" placeholder="Signature">
-   <input id="applicant" name="applicant" class="field" type="text" placeholder="Signature of Applicant"> -->
   </form>
 </div>
 
 <footer style="text-align:center; font-size:13px; padding:6px; background:#333; color:#fff;">
   Software design by Ghulam Murtaza | 0323-2054415
 </footer>
+
+<script>
+   const scriptURL = "https://script.google.com/macros/s/AKfycbxyz12345/exec"; // replace with your Apps Script Web App URL
+
+  function submitForm() {
+    const form = document.getElementById("bookingForm");
+    const data = {};
+    for (let i = 0; i < form.elements.length; i++) {
+      if (form.elements[i].name) {
+        data[form.elements[i].name] = form.elements[i].value;
+      }
+    }
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(response => {
+      alert("Data saved successfully!");
+      form.reset();
+    })
+    .catch(err => {
+      console.error("Error:", err);
+      alert("Error saving data!");
+    });
+  }
+</script>
 </body>
 </html>
