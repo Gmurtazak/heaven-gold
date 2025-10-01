@@ -11,8 +11,14 @@
     width: 210mm;
     height: 297mm;
     margin: auto;
-    background: url('application-form.jpg') no-repeat center top; /* <-- direct reference */
-    background-size: cover;
+  }
+  .a4 img.bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 297mm;
+    z-index: -1; /* keep image in background */
   }
   .field {
     position: absolute;
@@ -62,6 +68,10 @@
 </div>
 
 <div class="a4">
+  <!-- Background Image -->
+  <img src="application-form.jpg" class="bg">
+
+  <!-- Input Fields -->
   <input id="name" class="field" type="text" placeholder="Name">
   <input id="father" class="field" type="text" placeholder="Father/Husband Name">
   <input id="nic" class="field" type="text" placeholder="N.I.C No.">
@@ -82,7 +92,6 @@
   <input id="nok_nic" class="field" type="text" placeholder="N.I.C">
   <input id="nok_father" class="field" type="text" placeholder="Father/Husband">
   <input id="nok_relation" class="field" type="text" placeholder="Relation">
-  <!-- <label id="design" class="field">Software design by Ghulam Murtaza | 0323-2054415</label> -->
 </div>
 </body>
 </html>
