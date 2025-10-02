@@ -17,8 +17,18 @@
     box-sizing: border-box;
   }
 
-  .field {
+  /* row container is absolutely positioned; inputs inside are positioned relative to the row */
+  .row {
     position: absolute;
+    left: 0;
+    width: 100%;
+    height: 8mm; /* ensure enough height for inputs (adjust if needed) */
+    box-sizing: border-box;
+    pointer-events: auto;
+  }
+
+  .field {
+    position: absolute; /* positioned relative to .row */
     font-size: 10pt;
     color: #000;
     background: transparent;
@@ -26,6 +36,11 @@
     outline: none;
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
+    height: 7mm;        /* fixed height to avoid autosizing differences */
+    line-height: 7mm;   /* vertically center text */
+    vertical-align: middle;
+    font-family: Arial, sans-serif;
   }
 
   .no-print { margin: 10px 0; text-align: center; }
@@ -55,54 +70,67 @@
 </div>
 
 <div class="a4" id="page">
-  <!-- Dynamic rows will be injected here -->
+  <!-- rows will be injected here -->
 </div>
 
 <script>
   const container = document.getElementById("page");
 
   // Position settings
-  const initialTopMM = 53;   // starting position for row 17
-  const rowStepMM    = 6;   // distance between rows
+  const initialTopMM = 53;   // starting position for row 17 (in mm)
+  const rowStepMM    = 6;    // distance between rows (in mm)
 
-  // Column positions (in mm, adjust until they fit your image)
+  // Column positions (in mm) relative to the left edge of the page
   const col1Left = 37;   // Date column
   const col2Left = 83;   // Description column
   const col3Left = 160;  // Amount column
 
+  // Convert millimeters to string with fixed decimals to reduce rounding artifacts
+  function mm(v) {
+    return v.toFixed(3) + "mm";
+  }
+
   for (let i = 17; i <= 53; i++) {
     let rowIndex = i - 17;
+    // compute top for each row with a single arithmetic expression (no cumulative +=)
     let topMM = initialTopMM + rowStepMM * rowIndex;
 
-    // Date field
+    // create row container (positioned absolutely on the page)
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+    rowDiv.style.top = mm(topMM);
+
+    // Date field (positioned relative to row)
     let dateInput = document.createElement("input");
     dateInput.type = "text";
     dateInput.className = "field";
-    dateInput.style.top = topMM + "mm";
-    dateInput.style.left = col1Left + "mm";
-    dateInput.style.width = "35mm";
+    dateInput.style.left = mm(col1Left);
+    dateInput.style.width = mm(35); // 35mm
     dateInput.placeholder = "Date";
-    container.appendChild(dateInput);
 
     // Description field
     let descInput = document.createElement("input");
     descInput.type = "text";
     descInput.className = "field";
-    descInput.style.top = topMM + "mm";
-    descInput.style.left = col2Left + "mm";
-    descInput.style.width = "70mm";
+    descInput.style.left = mm(col2Left);
+    descInput.style.width = mm(70); // 70mm
     descInput.placeholder = "Description";
-    container.appendChild(descInput);
 
     // Amount field
     let amtInput = document.createElement("input");
     amtInput.type = "text";
     amtInput.className = "field";
-    amtInput.style.top = topMM + "mm";
-    amtInput.style.left = col3Left + "mm";
-    amtInput.style.width = "35mm";
+    amtInput.style.left = mm(col3Left);
+    amtInput.style.width = mm(35); // 35mm
     amtInput.placeholder = "Amount";
-    container.appendChild(amtInput);
+
+    // append inputs to the row container
+    rowDiv.appendChild(dateInput);
+    rowDiv.appendChild(descInput);
+    rowDiv.appendChild(amtInput);
+
+    // append row to page
+    container.appendChild(rowDiv);
   }
 </script>
 
