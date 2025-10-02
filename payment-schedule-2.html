@@ -5,15 +5,18 @@
 <title>Heaven Gold City Phase II - Payment Schedule</title>
 <style>
   @page { size: A4; margin: 0; }
-  body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; }
   .a4 {
     position: relative;
     width: 210mm;
     height: 297mm;
     margin: auto;
-    background: url('payment-schedule-2.jpg') no-repeat center top;
-    background-size: cover;
+    background: url("file:///mnt/data/payment-schedule-2.jpg") no-repeat center top;
+    background-size: 210mm 297mm;
+    -webkit-print-color-adjust: exact;
+    box-sizing: border-box;
   }
+
   .field {
     position: absolute;
     font-size: 10pt;
@@ -21,7 +24,10 @@
     background: transparent;
     border: none;
     outline: none;
+    padding: 0;
+    margin: 0;
   }
+
   .no-print { margin: 10px 0; text-align: center; }
   .btn {
     display: inline-block;
@@ -40,92 +46,65 @@
     .no-print { display: none; }
     .field { border: none; }
   }
-
-  /* === Field positions (adjust to match your image precisely) === */
-  #saleDate     { top: 60mm; left: 35mm; width: 35mm; }
-  #saleTerm     { top: 60mm; left: 116mm; width: 40mm; }
-  #projectname  { top: 78mm; left: 48mm; width: 120mm; }
-  #name         { top: 87mm; left: 30mm; width: 120mm; }
-  #fatherName   { top: 97mm; left: 61mm; width: 120mm; }
-  #nic          { top: 106mm; left: 35mm; width: 40mm; }
-  #contact      { top: 106mm; left: 95mm; width: 40mm; }
-  #email        { top: 106mm; left: 150mm; width: 50mm; }
-  #address      { top: 115mm; left: 54mm; width: 165mm; }
-  #propertyNo   { top: 124mm; left: 40mm; width: 35mm; }
-  #size         { top: 124mm; left: 87mm; width: 35mm; }
-  #location     { top: 124mm; left: 147mm; width: 80mm; }
-  #category     { top: 133mm; left: 35mm; width: 35mm; }
-  #features     { top: 133mm; left: 99mm; width: 125mm; }
-  #westOpen     { top: 142mm; left: 37mm; width: 35mm; }
-  #parkFacing   { top: 142mm; left: 102mm; width: 35mm; }
-  #totalSaleAmt { top: 142mm; left: 158mm; width: 60mm; }
-  #roadFacing   { top: 151mm; left: 39mm; width: 35mm; }
-  #corner       { top: 151mm; left: 93mm; width: 35mm; }
-  #discount     { top: 151mm; left: 148mm; width: 60mm; }
-  #groundFacing { top: 160mm; left: 44mm; width: 35mm; }
-  #netSaleAmt   { top: 160mm; left: 113mm; width: 105mm; }
-
-  /* Example payment row positions — copy and change top: values for additional rows */
-  #row1_date    { top: 180mm; left: 30mm; width: 30mm; }
-  #row1_desc    { top: 180mm; left: 65mm; width: 90mm; }
-  #row1_amt     { top: 180mm; left: 160mm; width: 35mm; }
-
-  /* Footer */
-  footer {
-    text-align: center;
-    font-size: 13px;
-    padding: 6px;
-    background: #333;
-    color: #fff;
-  }
 </style>
 </head>
 <body>
 
-<!-- Print / Actions -->
 <div class="no-print">
   <button onclick="window.print()" class="btn">🖨️ Print</button>
 </div>
 
-<!-- A4 Container -->
-<div class="a4">
-  <!-- Basic Info Fields -->
-  <input id="saleDate" class="field" type="text" placeholder="Sale Date">
-  <input id="saleTerm" class="field" type="text" placeholder="Sale Term">
-  <input id="projectname" class="field" type="text" placeholder="Project Name">
-  <input id="name" class="field" type="text" placeholder="Name">
-  <input id="fatherName" class="field" type="text" placeholder="Father/Husband Name">
-  <input id="nic" class="field" type="text" placeholder="N.I.C No">
-  <input id="contact" class="field" type="text" placeholder="Contact">
-  <input id="email" class="field" type="text" placeholder="Email">
-  <input id="address" class="field" type="text" placeholder="Residential Address">
-
-  <!-- Property Info -->
-  <input id="propertyNo" class="field" type="text" placeholder="Property No">
-  <input id="size" class="field" type="text" placeholder="Size">
-  <input id="location" class="field" type="text" placeholder="Location">
-  <input id="category" class="field" type="text" placeholder="Category">
-  <input id="features" class="field" type="text" placeholder="Features">
-
-  <!-- Additional Details -->
-  <input id="westOpen" class="field" type="text" placeholder="West Open">
-  <input id="parkFacing" class="field" type="text" placeholder="Park Facing">
-  <input id="totalSaleAmt" class="field" type="text" placeholder="Total Sale Amt">
-  <input id="roadFacing" class="field" type="text" placeholder="Road Facing">
-  <input id="corner" class="field" type="text" placeholder="Corner">
-  <input id="discount" class="field" type="text" placeholder="Discount">
-  <input id="groundFacing" class="field" type="text" placeholder="Ground Facing">
-  <input id="netSaleAmt" class="field" type="text" placeholder="Net Sale Amount">
-
-  <!-- Example Payment Row (duplicate and change positions for more rows) -->
-  <input id="row1_date" class="field" type="text" placeholder="Due Date">
-  <input id="row1_desc" class="field" type="text" placeholder="Description">
-  <input id="row1_amt" class="field" type="text" placeholder="Amount">
+<div class="a4" id="page">
+  <!-- Dynamic rows will be injected here -->
 </div>
 
-<footer>
-  Software design by Ghulam Murtaza | 0323-2054415
-</footer>
+<script>
+  const container = document.getElementById("page");
+
+  // Position settings
+  const initialTopMM = 175;   // starting position for row 17
+  const rowStepMM    = 5.5;   // distance between rows
+
+  // Column positions (in mm, adjust until they fit your image)
+  const col1Left = 30;   // Date column
+  const col2Left = 80;   // Description column
+  const col3Left = 160;  // Amount column
+
+  for (let i = 17; i <= 52; i++) {
+    let rowIndex = i - 17;
+    let topMM = initialTopMM + rowStepMM * rowIndex;
+
+    // Date field
+    let dateInput = document.createElement("input");
+    dateInput.type = "text";
+    dateInput.className = "field";
+    dateInput.style.top = topMM + "mm";
+    dateInput.style.left = col1Left + "mm";
+    dateInput.style.width = "35mm";
+    dateInput.placeholder = "Date";
+    container.appendChild(dateInput);
+
+    // Description field
+    let descInput = document.createElement("input");
+    descInput.type = "text";
+    descInput.className = "field";
+    descInput.style.top = topMM + "mm";
+    descInput.style.left = col2Left + "mm";
+    descInput.style.width = "70mm";
+    descInput.placeholder = "Description";
+    container.appendChild(descInput);
+
+    // Amount field
+    let amtInput = document.createElement("input");
+    amtInput.type = "text";
+    amtInput.className = "field";
+    amtInput.style.top = topMM + "mm";
+    amtInput.style.left = col3Left + "mm";
+    amtInput.style.width = "35mm";
+    amtInput.placeholder = "Amount";
+    container.appendChild(amtInput);
+  }
+</script>
 
 </body>
 </html>
