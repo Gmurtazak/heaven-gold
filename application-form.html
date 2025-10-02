@@ -6,52 +6,21 @@
 <style>
   @page { size: A4; margin: 0; }
   body { margin: 0; padding: 0; font-family: Arial, sans-serif;}
-  .a4 {
-    position: relative;
-    width: 210mm;
-    height: 297mm;
-    margin: auto;
-    box-sizing: border-box;
-  }
-  .a4 img.bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 210mm;
-    height: 297mm;
-    z-index: 0; /* background */
-    object-fit: cover;
-  }
-  .field {
-    position: absolute;
-    border: none;
-    background: transparent;
-    font-size: 12pt;
-    width: 70mm;
-    color: #000;
-    z-index: 2; /* above background */
-    outline: none; /* remove focus outline for print */
-  }
+  .a4 { position: relative; width: 210mm; height: 297mm; margin: auto; box-sizing: border-box; }
+  .a4 img.bg { position: absolute; top: 0; left: 0; width: 210mm; height: 297mm; z-index: 0; object-fit: cover; }
+  .field { position: absolute; border: none; background: transparent; font-size: 12pt; width: 70mm; color: #000; z-index: 2; outline: none; }
   textarea.field { resize: none; overflow: hidden; }
 
-  /* Signature image placeholders (clickable) */
-  .sig {
-    position: absolute;
-    z-index: 2;
-    border: 1px dashed rgba(0,0,0,0.12);
-    background: transparent;
-    display: inline-block;
-    object-fit: contain;
-  }
-  /* clickable label to show pointer */
-  .sig-label { cursor: pointer; display:inline-block; }
+  /* Signature label (absolute) and image inside */
+  .sig-label { position: absolute; display: block; z-index: 2; cursor: pointer; border: 1px dashed rgba(0,0,0,0.12); width: 120px; height: 50px; overflow: hidden; background: transparent; }
+  .sig-label img { display: block; width: 100%; height: 100%; object-fit: contain; background: transparent; }
 
   @media print {
     .no-print { display: none; }
-    input[type="file"], label.upload-btn { display: none; } /* hide upload controls on print */
+    input[type="file"], label.upload-btn { display: none; }
   }
 
-  /* Field positions (adjusted to uploaded form) */
+  /* Field positions */
   #name { top: 95mm; left: 25mm; width: 120mm; }
   #father { top: 102mm; left: 61mm; width: 120mm; }
   #nic { top: 109mm; left: 30mm; width: 60mm; }
@@ -73,38 +42,16 @@
   #nok_father { top: 176mm; left: 46mm; width: 90mm; }
   #nok_relation { top: 176mm; left: 133mm; width: 60mm; }
   #lastdate { top: 275mm; left: 24mm; width: 60mm; }
-  /* We'll position signature images */
-  #signa_img { top: -24mm; left: 69mm; width: 100px; height: 50px; }
-  #signk_img { top: -24mm; left: 38mm; width: 100px; height: 50px; }
 
-  /* design note */
-  #design {
-    position: absolute;
-    top: 279mm;
-    left: 57mm;
-    width: 91mm;
-    font-size: 13px;
-    padding: 6px;
-    z-index: 2;
-  }
+  /* signature label positions */
+  #signa_label { top:273mm; left:50mm; }
+  #signk_label { top:273mm; left:130mm; }
 
-  /* small upload button (no-print) */
-  .upload-controls {
-    margin: 12px 0;
-    text-align: center;
-  }
-  .upload-controls label.upload-btn {
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 6px;
-    background: #007bff;
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    margin-right: 8px;
-  }
+  #design { position: absolute; top: 279mm; left: 57mm; width: 91mm; font-size: 13px; padding: 6px; z-index: 2; }
 
-  /* ensure inputs wrap text where needed (for printing) */
+  .upload-controls { margin: 12px 0; text-align: center; }
+  .upload-controls label.upload-btn { display: inline-block; padding: 8px 12px; border-radius: 6px; background: #007bff; color: #fff; cursor: pointer; font-size: 14px; margin-right: 8px; }
+
   input.field, textarea.field { white-space: pre-wrap; }
 </style>
 </head>
@@ -116,18 +63,16 @@
     </button>
   </div>
 
-  <!-- Upload controls for signatures (hidden on print) -->
   <div class="upload-controls">
-    <label class="upload-btn" for="signa">Upload Applicant Signature</label>
-    <label class="upload-btn" for="signk">Upload Next-of-Kin Signature</label>
+    <label class="upload-btn" for="signa_input">Upload Applicant Signature</label>
+    <label class="upload-btn" for="signk_input">Upload Next-of-Kin Signature</label>
   </div>
 </div>
 
 <div class="a4">
-  <!-- Background Image -->
   <img src="application-form.jpg" class="bg" alt="Form background">
 
-  <!-- Input Fields -->
+  <!-- fields -->
   <input id="name" class="field" type="text" placeholder="Name">
   <input id="father" class="field" type="text" placeholder="Father/Husband Name">
   <input id="nic" class="field" type="text" placeholder="N.I.C No.">
@@ -143,58 +88,158 @@
   <input id="location" class="field" type="text" placeholder="Location">
   <input id="category" class="field" type="text" placeholder="Category">
 
-  <!-- Next of Kin -->
   <input id="nok_name" class="field" type="text" placeholder="Next of Kin Name">
   <input id="nok_nic" class="field" type="text" placeholder="N.I.C">
   <input id="nok_father" class="field" type="text" placeholder="Father/Husband">
   <input id="nok_relation" class="field" type="text" placeholder="Relation">
   <input id="lastdate" class="field" type="text" placeholder="Date">
 
-  <!-- Signature placeholders (images) -->
-  <label class="sig-label" style="position:absolute; top:273mm; left:50mm; z-index:2;" for="signa">
-    <img id="signa_img" class="sig" src="" style="width:100px; height:50px;">
+  <!-- signature labels (absolute) with image inside -->
+  <label id="signa_label" class="sig-label" for="signa_input" style="">
+    <img id="signa_img" src="" alt="Applicant signature">
   </label>
 
-  <label class="sig-label" style="position:absolute; top:273mm; left:130mm; z-index:2;" for="signk">
-    <img id="signk_img" class="sig" src="" style="width:100px; height:50px;">
+  <label id="signk_label" class="sig-label" for="signk_input" style="">
+    <img id="signk_img" src="" alt="Next-of-Kin signature">
   </label>
 
-  <!-- Hidden file inputs to accept signature images -->
-  <input id="signa" type="file" accept="image/*" style="display:none;">
-  <input id="signk" type="file" accept="image/*" style="display:none;">
+  <!-- hidden file inputs -->
+  <input id="signa_input" type="file" accept="image/*" style="display:none;">
+  <input id="signk_input" type="file" accept="image/*" style="display:none;">
 
-
+  <div id="design">Design / Note</div>
+</div>
 
 <script>
-  // Helper to read file and set image src
-  function setupImageInput(fileInputId, imgId) {
-    const input = document.getElementById(fileInputId);
-    const img = document.getElementById(imgId);
+/*
+  Function: removeWhiteMakeTransparent
+  - draws image into a canvas
+  - converts near-white pixels (threshold) to alpha=0
+  - returns a PNG dataURL via callback
+*/
+function removeWhiteMakeTransparent(img, options, cb) {
+  options = options || {};
+  const threshold = (typeof options.threshold === 'number') ? options.threshold : 240; // 0-255
+  const feather = (typeof options.feather === 'number') ? options.feather : 10; // tolerance smoothing
 
-    input.addEventListener('change', function () {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        img.src = e.target.result;
+  // scale canvas to image natural size for best quality
+  const w = img.naturalWidth || img.width;
+  const h = img.naturalHeight || img.height;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, w, h);
+
+  try {
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i], g = data[i+1], b = data[i+2];
+      // decide whiteness
+      // if R,G,B all above threshold -> make transparent
+      // "feather" softens the edge by scaling alpha depending on how close to threshold
+      const avg = (r + g + b) / 3;
+      if (avg >= threshold) {
+        // fully white-ish -> transparent
+        data[i+3] = 0;
+      } else if (avg >= (threshold - feather)) {
+        // near-white -> reduce alpha proportionally
+        const factor = (threshold - avg) / feather; // 0..1
+        data[i+3] = Math.round(data[i+3] * factor);
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    // export as PNG to preserve transparency
+    const png = canvas.toDataURL('image/png');
+    cb(null, png);
+  } catch (err) {
+    // security errors can happen if cross-origin image used; fallback to original source if so
+    cb(err, null);
+  }
+}
+
+/* wire up preview + white->transparent conversion */
+function setupSignatureInput(fileInputId, imgId, labelId) {
+  const input = document.getElementById(fileInputId);
+  const img = document.getElementById(imgId);
+  const label = document.getElementById(labelId);
+
+  // clicking label opens file dialog (label's for attribute wired)
+  input.addEventListener('change', function() {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (png, jpg).');
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const tempImg = new Image();
+      // to avoid tainting canvas, we must not set crossOrigin unless source is same-origin.
+      tempImg.onload = function() {
+        // Convert white -> transparent
+        removeWhiteMakeTransparent(tempImg, { threshold: 240, feather: 12 }, function(err, pngDataUrl) {
+          if (!err && pngDataUrl) {
+            img.src = pngDataUrl;
+            label.style.border = 'none';
+          } else {
+            // fallback: use original read data (may show white background)
+            img.src = ev.target.result;
+            label.style.border = 'none';
+          }
+        });
       };
-      reader.readAsDataURL(file);
-    });
+      tempImg.onerror = function() {
+        // if image can't be loaded, fallback to raw
+        img.src = ev.target.result;
+        label.style.border = 'none';
+      };
+      tempImg.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 
-    // allow clicking the image area to open file dialog (label already does that)
-  }
+  // double-click to clear preview
+  img.addEventListener('dblclick', function() {
+    img.src = '';
+    input.value = '';
+    label.style.border = '1px dashed rgba(0,0,0,0.12)';
+  });
+}
 
-  setupImageInput('signa', 'signa_img');
-  setupImageInput('signk', 'signk_img');
+// position signature labels precisely (we set style.top/left in mm)
+function setLabelPositionByMM(labelId, topMM, leftMM, widthPx, heightPx) {
+  const label = document.getElementById(labelId);
+  // convert mm to px for screen: 1mm ≈ 3.78px (96dpi) — this is for preview only
+  const pxPerMM = 3.78;
+  label.style.top = (topMM * pxPerMM) + 'px';
+  label.style.left = (leftMM * pxPerMM) + 'px';
+  if (widthPx) label.style.width = widthPx + 'px';
+  if (heightPx) label.style.height = heightPx + 'px';
+}
 
-  // Auto-resize textarea so text fits visually (optional)
+// initialize
+document.addEventListener('DOMContentLoaded', function() {
+  // Setup inputs
+  setupSignatureInput('signa_input', 'signa_img', 'signa_label');
+  setupSignatureInput('signk_input', 'signk_img', 'signk_label');
+
+  // OPTIONAL: set positions in mm (approximate screen preview)
+  // You can adjust these values if preview box not exactly at right place on your screen.
+  // Example: signa at 273mm top, 50mm left, width 120px, height 50px:
+  setLabelPositionByMM('signa_label', 273, 50, 140, 60);
+  setLabelPositionByMM('signk_label', 273, 130, 140, 60);
+
+  // Auto-resize address textarea
   const addr = document.getElementById('address');
-  function resizeTA(el) {
-    el.style.height = '1px';
-    el.style.height = (el.scrollHeight) + 'px';
-  }
+  function resizeTA(el) { el.style.height='1px'; el.style.height = (el.scrollHeight)+'px'; }
   addr.addEventListener('input', () => resizeTA(addr));
   resizeTA(addr);
+});
 </script>
 </body>
 </html>
