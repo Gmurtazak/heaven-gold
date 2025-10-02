@@ -11,7 +11,6 @@
     width: 210mm;
     height: 297mm;
     margin: auto;
-    box-sizing: border-box;
   }
   .a4 img.bg {
     position: absolute;
@@ -19,8 +18,7 @@
     left: 0;
     width: 210mm;
     height: 297mm;
-    z-index: 0; /* background */
-    object-fit: cover;
+    z-index: -1; /* keep image in background */
   }
   .field {
     position: absolute;
@@ -29,26 +27,9 @@
     font-size: 12pt;
     width: 70mm;
     color: #000;
-    z-index: 2; /* above background */
-    outline: none; /* remove focus outline for print */
   }
-  textarea.field { resize: none; overflow: hidden; }
-
-  /* Signature image placeholders (clickable) */
-  .sig {
-    position: absolute;
-    z-index: 2;
-    border: 1px dashed rgba(0,0,0,0.12);
-    background: transparent;
-    display: inline-block;
-    object-fit: contain;
-  }
-  /* clickable label to show pointer */
-  .sig-label { cursor: pointer; display:inline-block; }
-
   @media print {
     .no-print { display: none; }
-    input[type="file"], label.upload-btn { display: none; } /* hide upload controls on print */
   }
 
   /* Field positions (adjusted to uploaded form) */
@@ -61,7 +42,7 @@
   #dob { top: 115mm; left: 156mm; width: 35mm; }
   #nationality { top: 122mm; left: 35mm; width: 70mm; }
   #occupation { top: 122mm; left: 140mm; width: 60mm; }
-  #address { top: 129mm; left: 55mm; width: 150mm; height:18mm; }
+  #address { top: 129mm; left: 55mm; width: 150mm; }
   #property_no { top: 144mm; left: 38mm; width: 50mm; }
   #size { top: 144mm; left: 124mm; width: 40mm; }
   #location { top: 151mm; left: 31mm; width: 80mm; }
@@ -72,60 +53,30 @@
   #nok_nic { top: 168mm; left: 126mm; width: 60mm; }
   #nok_father { top: 176mm; left: 46mm; width: 90mm; }
   #nok_relation { top: 176mm; left: 133mm; width: 60mm; }
-  #lastdate { top: 273mm; left: 24mm; width: 60mm; }
-  /* We'll position signature images */
-  #signa_img { top: 273mm; left: 50mm; width: 100px; height: 30px; }
-  #signk_img { top: 273mm; left: 130mm; width: 100px; height: 30px; }
-
-  /* design note */
+    #lastdate { top: 273mm; left: 24mm; width: 60mm; }
+      #signa { top: 273mm; left: 50mm; width: 60mm; }
+       #signk { top: 273mm; left: 70mm; width: 60mm; }
   #design {
-    position: absolute;
     top: 279mm;
     left: 57mm;
     width: 91mm;
     font-size: 13px;
     padding: 6px;
-    z-index: 2;
   }
-
-  /* small upload button (no-print) */
-  .upload-controls {
-    margin: 12px 0;
-    text-align: center;
-  }
-  .upload-controls label.upload-btn {
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 6px;
-    background: #007bff;
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    margin-right: 8px;
-  }
-
-  /* ensure inputs wrap text where needed (for printing) */
-  input.field, textarea.field { white-space: pre-wrap; }
 </style>
 </head>
 <body>
 <div class="no-print" style="text-align:center; margin:20px;">
-  <div style="margin-bottom:10px;">
-    <button onclick="window.print()" style="padding:12px 22px; font-size:16px; border-radius:8px; background:#007bff; color:#fff; border:none; cursor:pointer;">
-      Print
-    </button>
-  </div>
-
-  <!-- Upload controls for signatures (hidden on print) -->
-  <div class="upload-controls">
-    <label class="upload-btn" for="signa">Upload Applicant Signature</label>
-    <label class="upload-btn" for="signk">Upload Next-of-Kin Signature</label>
-  </div>
+  <button 
+    onclick="window.print()" 
+    style="padding:15px 30px; font-size:18px; border-radius:8px; background:#007bff; color:#fff; border:none; cursor:pointer;">
+    Print
+  </button>
 </div>
 
 <div class="a4">
   <!-- Background Image -->
-  <img src="application-form.jpg" class="bg" alt="Form background">
+  <img src="application-form.jpg" class="bg">
 
   <!-- Input Fields -->
   <input id="name" class="field" type="text" placeholder="Name">
@@ -148,55 +99,11 @@
   <input id="nok_nic" class="field" type="text" placeholder="N.I.C">
   <input id="nok_father" class="field" type="text" placeholder="Father/Husband">
   <input id="nok_relation" class="field" type="text" placeholder="Relation">
-  <input id="lastdate" class="field" type="text" placeholder="Date">
+   <input id="lastdate" class="field" type="text" placeholder="date">
 
-  <!-- Signature placeholders (images) -->
-  <label class="sig-label" style="position:absolute; top:273mm; left:50mm; z-index:2;" for="signa">
-    <img id="signa_img" class="sig" src="" alt="Applicant signature" style="width:100px; height:30px;">
-  </label>
-
-  <label class="sig-label" style="position:absolute; top:273mm; left:130mm; z-index:2;" for="signk">
-    <img id="signk_img" class="sig" src="" alt="Next-of-Kin signature" style="width:100px; height:30px;">
-  </label>
-
-  <!-- Hidden file inputs to accept signature images -->
-  <input id="signa" type="file" accept="image/*" style="display:none;">
-  <input id="signk" type="file" accept="image/*" style="display:none;">
-
-  <!-- Optional design text -->
-  <div id="design">Design / Note</div>
+    <input id="signa" class="field" type="file">
+    
+    <input id="signk" class="field" type="file">
 </div>
-
-<script>
-  // Helper to read file and set image src
-  function setupImageInput(fileInputId, imgId) {
-    const input = document.getElementById(fileInputId);
-    const img = document.getElementById(imgId);
-
-    input.addEventListener('change', function () {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // allow clicking the image area to open file dialog (label already does that)
-  }
-
-  setupImageInput('signa', 'signa_img');
-  setupImageInput('signk', 'signk_img');
-
-  // Auto-resize textarea so text fits visually (optional)
-  const addr = document.getElementById('address');
-  function resizeTA(el) {
-    el.style.height = '1px';
-    el.style.height = (el.scrollHeight) + 'px';
-  }
-  addr.addEventListener('input', () => resizeTA(addr));
-  resizeTA(addr);
-</script>
 </body>
 </html>
