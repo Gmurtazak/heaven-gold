@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invoice / Extensions Summary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    #summary {
+      margin-top: 30px;
+      font-size: 16px;
+    }
+    #extensionsList {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+    #extensionsList div {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Extension Purchase Summary</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Details</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody id="itemsBody">
+      <!-- Items will be populated here -->
+    </tbody>
+  </table>
+
+  <div id="summary">
+    <p><strong>Total:</strong> <span id="totalPrice">PKR 0</span></p>
+    <p id="totalInWords">Amount in words: -</p>
+  </div>
+
+  <div id="extensionsList">
+    <!-- Bank details will be added here -->
+  </div>
+
+  <script>
+    // Format number with commas
+    function formatCurrency(num) {
+      return Number(num).toLocaleString('en-PK');
+    }
+
+    // Convert number to words (simple version for PKR)
+    function numberToWordsForDisplay(number) {
+      // This is a simple utility. You can replace this with a full version for large numbers if needed.
+      const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+      const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+      if (number === 0) return "Zero rupees";
+
+      function convert_hundreds(n) {
+        let words = "";
+        if (n > 99) {
+          words += units[Math.floor(n / 100)] + " Hundred ";
+          n = n % 100;
+        }
+        if (n > 19) {
+          words += tens[Math.floor(n / 10)] + " ";
+          n = n % 10;
+        } else if (n >= 10) {
+          words += teens[n - 10] + " ";
+          n = 0;
+        }
+        if (n > 0) {
+          words += units[n] + " ";
+        }
+        return words.trim();
+      }
+
+      return convert_hundreds(number) + " rupees only";
+    }
+
+    // Sample item list
+    const items = [
+      { name: "PDF Extension (PECL)", details: "PDF & API Service", price: 10750 }
+    ];
+
+    // Populate table
+    const tbody = document.getElementById('itemsBody');
+    if (!tbody) throw new Error('Table body with id="itemsBody" not found.');
+
+    tbody.innerHTML = "";
+    let total = 0;
+
+    items.forEach(it => {
+      total += Number(it.price || 0);
+      const tr = document.createElement('tr');
+
+      const tdName = document.createElement('td');
+      tdName.textContent = it.name;
+
+      const tdDetails = document.createElement('td');
+      tdDetails.textContent = it.details;
+
+      const tdPrice = document.createElement('td');
+      tdPrice.textContent = 'PKR ' + formatCurrency(it.price);
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdDetails);
+      tr.appendChild(tdPrice);
+      tbody.appendChild(tr);
+    });
+
+    // Set total price
+    const totalPriceEl = document.getElementById('totalPrice');
+    if (totalPriceEl) totalPriceEl.textContent = "PKR " + formatCurrency(total);
+
+    // Set total in words
+    const totalWordsEl = document.getElementById('totalInWords');
+    if (totalWordsEl) {
+      totalWordsEl.textContent = "Amount in words: " + numberToWordsForDisplay(total);
+    }
+
+    // Build bank details
+    const extList = document.getElementById('extensionsList');
+    if (extList) {
+      extList.textContent = ''; // Clear existing
+      const rows = [
+        ['Name', 'NASIR AND CO.'],
+        ['Account no', 'PK89DUIB0000000272933004'],
+        ['Bank', 'Dubai Islamic Bank Pakistan'],
+        ['SWIFT', 'DUIBPKKAXXX']
+      ];
+
+      rows.forEach(([label, value]) => {
+        const row = document.createElement('div');
+        const strong = document.createElement('strong');
+        strong.textContent = label + ': ';
+        row.appendChild(strong);
+        row.appendChild(document.createTextNode(value));
+        extList.appendChild(row);
+      });
+    }
+  </script>
+
+</body>
+</html>
