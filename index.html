@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Digital Form</title>
 
-  <!-- CSS Styles -->
+  <!-- Styles -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -103,22 +103,26 @@
   <!-- jsPDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- JavaScript Functions -->
+  <!-- JavaScript -->
   <script>
-    function purchaseNow() {
-      // Replace this with your actual upgrade/payment page URL
-      window.location.href = "https://your-upgrade-link.com";
-    }
-
-    async function generatePDF() {
+    window.onload = () => {
       const { jsPDF } = window.jspdf;
-      const banner = document.getElementById("trial-banner");
-      const pdf = new jsPDF();
-      const bannerText = banner.textContent.trim();
 
-      pdf.text(bannerText, 10, 20);
-      pdf.save("trial-banner.pdf");
-    }
+      // Attach to global scope so buttons can call them
+      window.purchaseNow = function () {
+        // Replace with your actual payment or upgrade page URL
+        window.location.href = "https://your-upgrade-link.com";
+      };
+
+      window.generatePDF = function () {
+        const banner = document.getElementById("trial-banner");
+        const bannerText = banner.textContent.trim();
+
+        const pdf = new jsPDF();
+        pdf.text(bannerText, 10, 20);
+        pdf.save("trial-banner.pdf");
+      };
+    };
   </script>
 </head>
 
@@ -134,7 +138,7 @@
   <!-- Title -->
   <h2>Digital Form</h2>
 
-  <!-- Dashboard Buttons -->
+  <!-- Dashboard -->
   <div class="dashboard">
     <a target="_blank" href="application-form.html"><button>Application Form</button></a>
     <a target="_blank" href="confirmation-letter.html"><button>Confirmation Letter</button></a>
