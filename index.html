@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Form</title>
   <style>
+    
     body {
       font-family: Arial, sans-serif;
       background: #f4f6f9;
@@ -371,8 +372,27 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 });
-</script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const banner = document.getElementById('trial-banner');
+    banner.style.display = 'block'; // Show the banner
+  });
+  </script>
 <style>
+  #trial-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff0f0;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 9999;
+    font-size: 18px;
+    display: none; /* Initially hidden */
+  }
     #expiry-banner {
       position: fixed;
       top: 0;
@@ -420,7 +440,9 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 <body>
-  <div role="status" aria-live="polite">yyyyyyy</div>
+  <div id="trial-banner">
+  Your trial version will expire in 10 days, kindly upgrade it.
+  </div>
   <h2>Digital Form</h2>
   <div class="dashboard">
     <a target="_blank" href="application-form.html"><button>Application Form</button></a>
