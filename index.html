@@ -83,41 +83,72 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       display: none; /* hidden by default */
     }
-    #expiry-banner button {
-      background: #fff;
-      color: #ff4d4d;
-      border: none;
-      padding: 6px 12px;
+    #trial-banner {
+      background-color: #ffeeba;
+      padding: 15px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      border: 1px solid #f5c6cb;
+      position: relative;
+    }
+
+    #purchase-button {
       margin-left: 15px;
-      font-weight: bold;
-      cursor: pointer;
+      padding: 8px 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
       border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #download-pdf {
+      margin-left: 10px;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
 </style>
+  <script>
+  function purchaseNow() {
+    // Redirect to your payment or upgrade page
+    window.location.href = "https://your-upgrade-link.com";
+  }
+
+  async function generatePDF() {
+    const { jsPDF } = window.jspdf;
+
+    const banner = document.getElementById("trial-banner");
+
+    const pdf = new jsPDF();
+
+    // Get text content of the banner
+    const bannerText = banner.textContent.trim();
+
+    pdf.text(bannerText, 10, 20);
+    pdf.save("trial-banner.pdf");
+  }
+</script>
+
+
+
+
+
+
+
 </head>
-  <!-- invoice section (hidden, used for PDF) -->
-<div id="invoice" style="display:none; padding:20px; font-family:Arial;">
-  <center><h2>TapboxesSolution Limited</h2><center>
-  <p><strong>Invoice:</strong> <span id="invNum"></span><br>
-     <strong>Date:</strong> <span id="invDate"></span></p>
-  <table border="1" cellspacing="0" cellpadding="6" width="100%">
-    <thead>
-      <tr><th>Service</th><th>Details</th><th>Price (PKR)</th></tr>
-    </thead>
-    <tbody id="itemsBody"></tbody>
-    <tfoot>
-      <tr><td colspan="2" style="text-align:right"><strong>Total </strong></td>
-          <td id="totalPrice"></td></tr>
-    </tfoot>
-  </table>
-  <h3>Account detail:</h3>
-  <ul id="extensionsList"></ul>
-</div>
+ 
 
 <body>
-  <div id="trial-banner">
+ <div id="trial-banner">
   Your extension tool will expire in 10 days, kindly upgrade it.
-  </div>
+  <button id="purchase-button" onclick="purchaseNow()">Purchase</button>
+  <button id="download-pdf" onclick="generatePDF()">Download PDF</button>
+</div>
+
   <h2>Digital Form</h2>
   <div class="dashboard">
     <a target="_blank" href="application-form.html"><button>Application Form</button></a>
