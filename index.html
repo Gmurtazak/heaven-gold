@@ -3,169 +3,158 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invoice / Extensions Summary</title>
+  <title>Digital Form</title>
+
+  <!-- Styles -->
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 40px;
-      background: #f9f9f9;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
+
     h2 {
+      margin-top: 100px;
       color: #333;
     }
-    table {
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .dashboard a {
+      text-decoration: none;
+    }
+
+    .dashboard button {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #fff;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-    #summary {
-      margin-top: 30px;
-      font-size: 16px;
-    }
-    #extensionsList {
-      margin-top: 30px;
       padding: 20px;
-      background: #fff;
-      border: 1px solid #ccc;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    #extensionsList div {
-      margin-bottom: 8px;
+
+    .dashboard button:hover {
+      background: #0056b3;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    /* Trial Banner */
+    #trial-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ffeeba;
+      color: #333;
+      font-weight: bold;
+      text-align: center;
+      padding: 15px;
+      border: 1px solid #f5c6cb;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+    }
+
+    #purchase-button {
+      margin-left: 15px;
+      padding: 8px 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #download-pdf {
+      margin-left: 10px;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
   </style>
+
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- JavaScript -->
+  <script>
+    window.onload = () => {
+      const { jsPDF } = window.jspdf;
+
+      // Attach to global scope so buttons can call them
+      window.purchaseNow = function () {
+        // Replace with your actual payment or upgrade page URL
+        window.location.href = "https://your-upgrade-link.com";
+      };
+
+      window.generatePDF = function () {
+        const banner = document.getElementById("trial-banner");
+        const bannerText = banner.textContent.trim();
+
+        const pdf = new jsPDF();
+        pdf.text(bannerText, 10, 20);
+        pdf.save("trial-banner.pdf");
+      };
+    };
+  </script>
 </head>
+
 <body>
 
-  <h2>Extension Purchase Summary</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Details</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody id="itemsBody">
-      <!-- Items will be populated here -->
-    </tbody>
-  </table>
-
-  <div id="summary">
-    <p><strong>Total:</strong> <span id="totalPrice">PKR 0</span></p>
-    <p id="totalInWords">Amount in words: -</p>
+  <!-- Trial Banner -->
+  <div id="trial-banner">
+    Your extension tool will expire in 10 days, kindly upgrade it.
+    <button id="purchase-button" onclick="purchaseNow()">Purchase</button>
+    <button id="download-pdf" onclick="generatePDF()">Download PDF</button>
   </div>
 
-  <div id="extensionsList">
-    <!-- Bank details will be added here -->
+  <!-- Title -->
+  <h2>Digital Form</h2>
+
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <a target="_blank" href="application-form.html"><button>Application Form</button></a>
+    <a target="_blank" href="confirmation-letter.html"><button>Confirmation Letter</button></a>
+    <a target="_blank" href="allotment-Letter.html"><button>Allotment Letter</button></a>
+    <a target="_blank" href="receipt-form.html"><button>Receipt Form</button></a>
+    <a target="_blank" href="payment-schedule.html"><button>Payment Schedule</button></a>
+    <a target="_blank" href="payment-schedule-2.html"><button>Payment Schedule - 2</button></a>
+    <a target="_blank" href="payment-schedule-3.html"><button>Payment Schedule - 3</button></a>
+    <!-- Uncomment below if needed -->
+    <!-- <a target="_blank" href="booking-form.html"><button>Booking Form</button></a> -->
   </div>
 
-  <script>
-    // Format number with commas
-    function formatCurrency(num) {
-      return Number(num).toLocaleString('en-PK');
-    }
-
-    // Convert number to words (simple version for PKR)
-    function numberToWordsForDisplay(number) {
-      // This is a simple utility. You can replace this with a full version for large numbers if needed.
-      const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-      const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-      const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-
-      if (number === 0) return "Zero rupees";
-
-      function convert_hundreds(n) {
-        let words = "";
-        if (n > 99) {
-          words += units[Math.floor(n / 100)] + " Hundred ";
-          n = n % 100;
-        }
-        if (n > 19) {
-          words += tens[Math.floor(n / 10)] + " ";
-          n = n % 10;
-        } else if (n >= 10) {
-          words += teens[n - 10] + " ";
-          n = 0;
-        }
-        if (n > 0) {
-          words += units[n] + " ";
-        }
-        return words.trim();
-      }
-
-      return convert_hundreds(number) + " rupees only";
-    }
-
-    // Sample item list
-    const items = [
-      { name: "PDF Extension (PECL)", details: "PDF & API Service", price: 10750 }
-    ];
-
-    // Populate table
-    const tbody = document.getElementById('itemsBody');
-    if (!tbody) throw new Error('Table body with id="itemsBody" not found.');
-
-    tbody.innerHTML = "";
-    let total = 0;
-
-    items.forEach(it => {
-      total += Number(it.price || 0);
-      const tr = document.createElement('tr');
-
-      const tdName = document.createElement('td');
-      tdName.textContent = it.name;
-
-      const tdDetails = document.createElement('td');
-      tdDetails.textContent = it.details;
-
-      const tdPrice = document.createElement('td');
-      tdPrice.textContent = 'PKR ' + formatCurrency(it.price);
-
-      tr.appendChild(tdName);
-      tr.appendChild(tdDetails);
-      tr.appendChild(tdPrice);
-      tbody.appendChild(tr);
-    });
-
-    // Set total price
-    const totalPriceEl = document.getElementById('totalPrice');
-    if (totalPriceEl) totalPriceEl.textContent = "PKR " + formatCurrency(total);
-
-    // Set total in words
-    const totalWordsEl = document.getElementById('totalInWords');
-    if (totalWordsEl) {
-      totalWordsEl.textContent = "Amount in words: " + numberToWordsForDisplay(total);
-    }
-
-    // Build bank details
-    const extList = document.getElementById('extensionsList');
-    if (extList) {
-      extList.textContent = ''; // Clear existing
-      const rows = [
-        ['Name', 'NASIR AND CO.'],
-        ['Account no', 'PK89DUIB0000000272933004'],
-        ['Bank', 'Dubai Islamic Bank Pakistan'],
-        ['SWIFT', 'DUIBPKKAXXX']
-      ];
-
-      rows.forEach(([label, value]) => {
-        const row = document.createElement('div');
-        const strong = document.createElement('strong');
-        strong.textContent = label + ': ';
-        row.appendChild(strong);
-        row.appendChild(document.createTextNode(value));
-        extList.appendChild(row);
-      });
-    }
-  </script>
+  <!-- Footer -->
+  <footer>
+    Software design by Ghulam Murtaza | 0323-2054415
+  </footer>
 
 </body>
 </html>
