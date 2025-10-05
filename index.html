@@ -103,27 +103,7 @@
   <!-- jsPDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- JavaScript -->
-  <script>
-    window.onload = () => {
-      const { jsPDF } = window.jspdf;
-
-      // Attach to global scope so buttons can call them
-      window.purchaseNow = function () {
-        // Replace with your actual payment or upgrade page URL
-        window.location.href = "https://your-upgrade-link.com";
-      };
-
-      window.generatePDF = function () {
-        const banner = document.getElementById("trial-banner");
-        const bannerText = banner.textContent.trim();
-
-        const pdf = new jsPDF();
-        pdf.text(bannerText, 10, 20);
-        pdf.save("trial-banner.pdf");
-      };
-    };
-  </script>
+  
 </head>
 
 <body>
@@ -131,8 +111,7 @@
   <!-- Trial Banner -->
   <div id="trial-banner">
     Your extension tool will expire in 10 days, kindly upgrade it.
-    <button id="purchase-button" onclick="purchaseNow()">Purchase</button>
-    <button id="download-pdf" onclick="generatePDF()">Download PDF</button>
+ <a href="https://gmurtazak.github.io/heaven-gold/purchased.html" target="_blank">Purchase</a>
   </div>
 
   <!-- Title -->
